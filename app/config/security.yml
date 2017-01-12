@@ -1,0 +1,40 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+security:
+
+    encoders:
+        ArmazemBarBundle\Entity\Usuario: plaintext
+            
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        main:
+            entity: { class: ArmazemBarBundle:Usuario, property: email }
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login_firewall:
+            pattern:   ^/login$
+            anonymous: ~
+        secured_area:
+            pattern:    ^/
+            form_login: 
+                check_path: _login_check
+                login_path: login
+                require_previous_session: true
+                use_referer: true
+                use_forward: true
+                always_use_default_target_path: false
+                # default_target_path:            /
+            logout:
+                path:   _logout
+                target: index
+            access_denied_handler: kernel.listener.access_denied.handler
+            
+            
+    access_control:
+        - { path: ^/login,          roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/usuario,        roles: ROLE_USUARIO }

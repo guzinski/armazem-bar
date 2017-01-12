@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Armazém Bar | Login</title>
+        
+        <script src="{{ asset('bundles/armazembar/js/jquery-1.11.1.min.js') }}"></script>
+        <script src="{{ asset('bundles/armazembar/js/jquery-migrate-1.2.1.min.js') }}"></script>
+        <script src="{{ asset('bundles/armazembar/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('bundles/armazembar/js/modernizr.min.js') }}"></script>
+        <script src="{{ asset('bundles/armazembar/js/pace.min.js') }}"></script>
+        <script src="{{ asset('bundles/armazembar/js/retina.min.js') }}"></script>
+        <script src="{{ asset('bundles/armazembar/js/jquery.cookies.js') }}"></script>
+
+        <script src="{{ asset('bundles/armazembar/js/custom.js') }}"></script>
+
+        
+        <link href="{{ asset('bundles/armazembar/css/style.default.css') }}" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+        
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="{{ asset('bundles/armazembar/js/html5shiv.js') }}"></script>
+        <script src="{{ asset('bundles/armazembar/js/respond.min.js') }}"></script>
+        <![endif]-->
+    </head>
+
+    <body class="signin">
+        <section>
+            <div class="panel panel-signin">
+                <div class="panel-body">
+                    <div class="logo text-center">
+                        <h2>Armazém Bar</h2>
+                    </div>
+                    <p class="text-center">{{ error }}</p>
+                    
+                    <div class="mb30"></div>
+                    
+                    <form action="{{ path('_login_check') }}" method="post">
+                        <div class="input-group mb15">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input value="{{ last_username }}" type="text" name="_username" class="form-control" placeholder="E-mail">
+                        </div><!-- input-group -->
+                        <div class="input-group mb15">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input type="password" name="_password" class="form-control"  placeholder="Senha">
+                        </div><!-- input-group -->
+                        
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <button type="submit" class="btn btn-success">Entrar <i class="fa fa-angle-right ml5"></i></button>
+                            </div>
+                        </div>                      
+                    </form>
+                    
+                </div><!-- panel-body -->
+            </div><!-- panel -->
+        </section>
+    </body>
+</html>

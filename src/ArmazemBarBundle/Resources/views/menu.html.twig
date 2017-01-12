@@ -1,0 +1,20 @@
+<div class="leftpanel">
+
+    <h5 class="leftpanel-title">Menu</h5>
+    <ul class="nav nav-pills nav-stacked">
+        <li {% if app.request.get('_route') == 'index' %} class="active"{% endif %}>
+            <a href="{{ path('index') }}">
+                <i class="fa fa-home"></i> <span>Home</span>
+            </a>
+        </li>
+        {% if is_granted('ROLE_USUARIO') %}
+        <li class="parent {% if 'usuario' in app.request.get('_route')  %} active{% endif %}"><a href=""><i class="fa fa-users"></i> <span>Usuarios</span></a>
+            <ul class="children" >
+                <li {% if app.request.get('_route') == 'usuario_form' %} class="active"{% endif %}><a href="{{ path('usuario_form') }}">Novo</a></li>
+                <li {% if app.request.get('_route') == 'usuario_index' %} class="active"{% endif %}><a href="{{ path('usuario_index') }}">Lista</a></li>
+            </ul>
+        </li>
+        {% endif  %}
+    </ul>
+
+</div><!-- leftpanel -->

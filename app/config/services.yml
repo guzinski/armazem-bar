@@ -1,0 +1,11 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/service_container.html
+parameters:
+#    parameter_name: value
+
+services:
+    kernel.listener.access_denied.handler:
+        class: ArmazemBarBundle\DependencyInjection\AccessDeniedHandler
+        arguments: ["@session", "@router"]
+        tags:
+           - { name: kernel.event_listener, event: security.kernel_response, method: handle}

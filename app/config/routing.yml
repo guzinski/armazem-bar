@@ -1,0 +1,9 @@
+armazem_bar:
+    resource: "@ArmazemBarBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+_login_check:
+    path:    /login/verificacao
+_logout:
+    path:    /login/sair

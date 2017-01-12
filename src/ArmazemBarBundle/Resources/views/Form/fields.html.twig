@@ -1,0 +1,57 @@
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div>
+    {% for child in form %}
+        {{ form_widget(child) }}
+    {% endfor %}
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+
+{% block radio_widget %}
+{% spaceless %}
+    <div class="rdio rdio-default">
+        <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        <label  for="{{ id }}">{{ label|trans }}</label>
+    </div>
+{% endspaceless %}
+{% endblock radio_widget %}
+
+
+
+{% block integer_widget %}
+{% spaceless %}
+    <input type="number" class="form-control" {{ block('widget_attributes') }} id="{{ id }}" name="{{ full_name }}" />
+{% endspaceless %}
+{% endblock integer_widget %}
+
+
+{% block form_row %}
+    <div class="form-group  {% if errors|length > 0 %} has-error {% endif %}">
+        <label class="col-sm-5 col-md-4 col-lg-3 control-label">{{ form_label(form) }}
+            {% if required %}
+                <span class="asterisk">*</span>
+            {% endif %}
+        </label>
+        <div class="col-sm-7 col-md-8 col-lg-5">
+            {{ form_widget(form, { 'attr': {'class': 'form-control'} }) }}
+        </div>
+        {{ form_errors(form) }}
+    </div>
+{% endblock form_row %}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            {% for error in errors %}
+                <div class="row">
+                    <div class="alert alert-danger">
+                        <label class="error">{{ error.message }}</label>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}

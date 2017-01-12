@@ -1,0 +1,96 @@
+{% extends "ArmazemBarBundle::layout.html.twig" %}
+{% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
+{% block title %}Armazém Bar | Usuárius{% endblock %}
+{% block head %}
+    <link href="{{ asset('bundles/armazembar/css/basic.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/armazembar/css/dropzone.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/armazembar/css/bootstrap-wysihtml5.css') }}" rel="stylesheet" />
+    <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/validate/additional-methods.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery-ui-1.10.3.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/dropzone.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/select2.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery.maskMoney.js') }}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery('#loading').hide();
+            jQuery('select').select2();
+            jQuery('.select2-container').removeClass("form-control").css("width", "100%")
+
+            jQuery("#basicForm").validate({
+                rules: {
+                    "usuario[email]":            {email: true},
+                    'usuario[senha][first]':     { minlength: 6 },
+                    'usuario[senha][second]':    { equalTo:  "#usuario_senha_first" },
+                },
+                highlight: function(element) {
+                    jQuery(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                success: function(element) {
+                    jQuery(element).closest('.form-group').removeClass('has-error');
+                },
+                errorPlacement: function(error, element) {
+                    jQuery(element).closest('.form-group').append(error);
+                },
+                validClass: "",
+                submitHandler: function(form) {
+                    jQuery("#salvar").hide();
+                    jQuery('#loading').show();
+                    form.submit();
+               }
+            });
+            
+        });
+        
+    </script>
+{% endblock %}
+
+{% block mainpanel %}
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-user"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a href="{{ path('usuario_index') }}">Usuário</a></li>
+                <li>{{ usuario.getid>0 ? "Editar" : "Cadastrar" }} Usuário</li>
+            </ul>
+            <h4>{{ usuario.getid>0 ? "Editar" : "Cadastrar" }} Usuário</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="POST" class="form-horizontal form-bordered" id="basicForm" action="">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        {{ form_row(form.nome) }}
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.senha) }}
+                        {{ form_row(form.nivel) }}
+                        {{ form_row(form._token) }}
+                        {{ form_errors(form) }}
+                    </div><!-- row -->
+                </div><!-- panel-body -->
+                <div class="panel-footer">
+                  <div class="row">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <img src="{{ asset('bundles/armazembar/images/loading.gif') }}" id="loading" alt="Carregando" />
+                        <button id="salvar" class="btn btn-primary mr5">Salvar</button>
+                        <button type="button" onclick="history.back()" class="btn btn-default mr5">Cancelar</button>
+                    </div>
+                  </div>
+                </div><!-- panel-footer -->  
+            </div><!-- panel -->
+            </form>
+
+        </div><!-- col-md-12 -->
+    </div><!-- row -->
+</div><!-- contentpanel -->
+{% endblock %}
