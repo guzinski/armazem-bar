@@ -21,9 +21,9 @@ class UsuarioController extends Controller
      * @Route("/", name="usuario_index")
      * @Template()
      */
-    public function indexAction($incluido = false)
+    public function indexAction(Request $request)
     {
-        return array('incluido'=>$incluido);
+        return array('incluido'=>$request->get('incluido'));
     }
 
     /**
