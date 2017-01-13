@@ -1,1 +1,24 @@
-Hello World!
+{% extends "ArmazemBarBundle::layout.html.twig" %}
+{% block title %}Armazém Bar | Index{% endblock %}
+{% block head %}
+{% endblock %}
+{% block mainpanel %}
+    <div class="pageheader">
+        <div class="media">
+            <div class="pageicon pull-left">
+                <i class="fa fa-home"></i>
+            </div>
+            <div class="media-body">
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
+                    <li>Home</li>
+                </ul>
+                <h4>Home</h4>
+            </div>
+        </div><!-- media -->
+    </div><!-- pageheader -->
+     <div class="contentpanel">
+         
+         Bem-Vindo
+     </div><!-- contentpanel -->
+{% endblock %}

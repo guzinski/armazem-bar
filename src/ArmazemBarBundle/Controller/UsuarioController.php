@@ -21,9 +21,9 @@ class UsuarioController extends Controller
      * @Route("/", name="usuario_index")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction($incluido = false)
     {
-        return array();
+        return array('incluido'=>$incluido);
     }
 
     /**
@@ -70,7 +70,7 @@ class UsuarioController extends Controller
         if ($form->isValid()) {
             $em->persist($usuario);
             $em->flush();
-            return $this->redirectToRoute("usuario_index");
+            return $this->redirectToRoute("usuario_index", ['incluido' => true]);
         }
         
         return array("usuario"=>$usuario, "form"=>$form->createView());
@@ -79,7 +79,7 @@ class UsuarioController extends Controller
     /**
      * @Route("/excluir", name="usuario_excluir")
      */
-    public function excluiUsuarioAction(Request $resquest) 
+    public function excluiAction(Request $resquest) 
     {
         $respone = array();
         $id = $resquest->request->getInt("id", null);

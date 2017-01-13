@@ -1,0 +1,68 @@
+{% extends "ArmazemBarBundle::layout.html.twig" %}
+{% block title %}Armazém Bar | Prato{% endblock %}
+{% block head %}
+    <link href="{{ asset('bundles/armazembar/css/style.datatables.css') }}" rel="stylesheet">
+    <script src="{{ asset('bundles/armazembar/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery-datatables.responsive.js') }}"></script>
+    <script src="//cdn.datatables.net/plug-ins/725b2a2115b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="{{ asset('bundles/armazembar/js/select2.min.js') }}"></script>
+    
+    <script>
+        var exRowTable;
+        jQuery(document).ready(function(){
+            exRowTable = jQuery('#pratos').DataTable({
+                    responsive: true,
+                    "ajax": "{{ path('prato_pagination') }}",
+                    "aoColumnDefs": [
+                        { 'bSortable': false, 'aTargets': [ 1 ] }
+                     ]
+            });
+
+            // DataTables Length to Select2
+            jQuery('div.dataTables_length select').removeClass('form-control input-sm');
+            jQuery('div.dataTables_length select').css({width: '60px'});
+            jQuery('div.dataTables_length select').select2({
+                minimumResultsForSearch: -1
+            });
+            
+
+
+        });
+        function excluir(id) {
+            bootbox.confirm("Deseja realmente excluir este Prato?", function(result) {
+                if (result) {
+                    jQuery.post("{{ path('prato_excluir') }}", {id: id}, function(data){
+                        if (data.ok==1) {
+                            exRowTable.draw();
+                        } else {
+                            bootbox.alert(data.error);
+                        }
+                        
+                    }, "json");
+                }
+            });
+        }
+        
+       
+    </script>
+{% endblock %}
+{% block mainpanel %}
+    <div class="pageheader">
+        <div class="media">
+            <div class="pageicon pull-left">
+                <i class="fa fa-cutlery"></i>
+            </div>
+            <div class="media-body">
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
+                    <li>Pratos</li>
+                </ul>
+                <h4>Pratos</h4>
+            </div>
+        </div><!-- media -->
+    </div><!-- pageheader -->
+     <div class="contentpanel">
+         
+         Bem-Vindo
+     </div><!-- contentpanel -->
+{% endblock %}

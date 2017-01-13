@@ -8,12 +8,10 @@
             </a>
         </li>
         {% if is_granted('ROLE_USUARIO') %}
-        <li class="parent {% if 'usuario' in app.request.get('_route')  %} active{% endif %}"><a href=""><i class="fa fa-users"></i> <span>Usuarios</span></a>
-            <ul class="children" >
-                <li {% if app.request.get('_route') == 'usuario_form' %} class="active"{% endif %}><a href="{{ path('usuario_form') }}">Novo</a></li>
-                <li {% if app.request.get('_route') == 'usuario_index' %} class="active"{% endif %}><a href="{{ path('usuario_index') }}">Lista</a></li>
-            </ul>
-        </li>
+        <li class="{% if 'usuario' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('usuario_index') }}"><i class="fa fa-users"></i> <span>Usuarios</span></a></li>
+        {% endif  %}
+        {% if is_granted('ROLE_PRATO') %}
+        <li class="{% if 'prato' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('prato_index') }}"><i class="fa fa-cutlery"></i> <span>Pratos</span></a></li>
         {% endif  %}
     </ul>
 
