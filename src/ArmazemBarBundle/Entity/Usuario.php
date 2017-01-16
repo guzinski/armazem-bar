@@ -5,12 +5,14 @@ namespace ArmazemBarBundle\Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Usuario
  *
  * @ORM\Table(name="usuario")
  * @ORM\Entity
+ * @UniqueEntity(fields="email", message="Já existe um Usuário com esse e-mail cadastrado.")
  */
 class Usuario extends BaseEntity implements UserInterface
 {

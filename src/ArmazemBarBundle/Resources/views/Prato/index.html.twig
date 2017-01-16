@@ -10,7 +10,7 @@
     <script>
         var table;
         jQuery(document).ready(function(){
-            jQuery("#msgExclusão, #msgerror").hide();
+            jQuery("#msgs").hide();
             table = jQuery('#pratos').DataTable({
                     "drawCallback": function( settings ) {
                         jQuery('.locked').hide();
@@ -39,34 +39,23 @@
             bootbox.confirm("Deseja realmente "+strStatus+" este Prato?", function(result) {
                 if (result) {
                     jQuery('.locked').fadeIn(50);
-                    jQuery.post("{{ path('prato_status') }}", {id: id, status: status}, function(data){
-                        jQuery(".alert").fadeOut();
-                        table.ajax.reload();
-                        if (data.ok==1) {
-                            jQuery("#msgExclusão").fadeIn();
-                        } else {
-                            jQuery("#msgerror").append(data.error).fadeIn();
-                        }
-                    }, "json");
+                    jQuery.post("{{ path('prato_status') }}", {id: id, status: status}, callback, "json");
                 }
             });
         }
         function excluir(id) {
-            bootbox.confirm("Deseja realmente excluir este Prato?", function(result) {
+            bootbox.confirm("Deseja realmente excluir este Prato (NÂO será possível a seua recuperação)?", function(result) {
                 if (result) {
                     jQuery('.locked').fadeIn(50);
-                    jQuery.post("{{ path('prato_excluir') }}", {id: id}, function(data){
-                        jQuery(".alert").fadeOut();
-                        table.ajax.reload();
-                        if (data.ok==1) {
-                            jQuery("#msgExclusão").fadeIn();
-                        } else {
-                            jQuery("#msgerror").append(data.error).fadeIn();
-                        }
-                        
-                    }, "json");
+                    jQuery.post("{{ path('prato_excluir') }}", {id: id}, callback, "json");
                 }
             });
+        }
+        
+        function callback(data) {
+            jQuery(".alert").remove();
+            table.ajax.reload();
+            jQuery("#msgs").append(data.message).fadeIn();
         }
         
        
@@ -96,27 +85,15 @@
         <hr/>
         <div class="row">
             <div class="col-lg-12">
-                {% if incluido %}
+                {% for msg in success %}
                 <div class="alert alert-success">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    Prato <strong>incluído</strong>  com sucesso.
+                    {{ msg|raw }}
                 </div>
-                {% endif %}
-                {% if alterado %}
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    Prato <strong>alterado</strong>  com sucesso.
-                </div>
-                {% endif %}
+                {% endfor %}
                 
-                <div id="msgExclusão" class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    Prato <strong>excluído</strong> com sucesso.
-                </div>
-                <div id="msgerror" class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                </div>
+                <div id="msgs"></div>
+                
                 <table id="pratos" class="table table-striped table-bordered">
                     <thead>
                         <tr>

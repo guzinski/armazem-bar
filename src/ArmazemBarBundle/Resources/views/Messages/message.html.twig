@@ -1,0 +1,13 @@
+{% if success is defined %}
+<div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    {{ success|raw }}
+</div>
+{% endif %}
+{% if error is defined %}
+<div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    {{ error|raw }}
+</div>
+{% endif %}

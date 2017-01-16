@@ -24,7 +24,13 @@ class PratoController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return array('incluido'=>$request->get('incluido'), 'alterado'=>$request->get('alterado'));
+        $success = "";
+        if ($request->getSession()->getFlashBag()->has("success")) {
+            $success = $request->getSession()->getFlashBag()->get("success");
+            $request->getSession()->getFlashBag()->clear();
+        }
+        
+        return array('success' => $success);
     }
     
     /**
@@ -73,7 +79,9 @@ class PratoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($prato);
             $em->flush();
-            return $this->redirectToRoute("prato_index", ['incluido' => !($id>0), 'alterado'=> ($id>0)]);
+            $msg = $id==0 ? "Prato <strong>incluído</strong>  com sucesso." : "Prato <strong>alterado</strong> com sucesso.";
+            $request->getSession()->getFlashBag()->add("success", $msg);
+            return $this->redirectToRoute("prato_index");
         }
         
         return array("prato"=>$prato, "form"=>$form->createView());
@@ -86,27 +94,29 @@ class PratoController extends Controller
     {
         $response   = array('ok'=>0);
         $id         = $resquest->get("id");
-        if (!is_null($id)) {
+        if (is_null($id)) {
+            $response['error'] = "Erro ao excluir prato, ID vazio!";
+        } else {
             $em = $this->getDoctrine()->getManager();
             $prato = $em->find(Prato::class, $id);
             if (is_null($prato)) {
                 $response['error'] = "Erro ao excluir, prato não encontrado!";
-                return new Response(json_encode($response));
+            } else {
+                if ($prato->getPedidoPratos()->count()>0){
+                    $response['error'] = "Não é possível excluir o prato, existem Pedidos vinculados!";
+                } else {
+                    try {
+                        $em->remove($prato);
+                        $em->flush();
+                        $response['ok'] = 1;
+                        $response['success'] = "Prato <strong>excluído</strong> com sucesso!";
+                    } catch (Exception $exc) {
+                        $response['error'] = "Erro ao excluir prato, problema com o banco de dados!";
+                    }
+                }
             }
-            if ($prato->getPedidoPratos()->count()>0){
-                $response['error'] = "Não é possível excluir o prato, existem Pedidos vinculados!";
-                return new Response(json_encode($response));
-            }
-            try {
-                $em->remove($prato);
-                $em->flush();
-                $response['ok'] = 1;
-            } catch (Exception $exc) {
-                $response['error'] = "Erro ao excluir prato, problema com o banco de dados!";
-            }
-        } else {
-            $response['error'] = "Erro ao excluir prato, ID vazio!";
         }
+        $response['message'] = $this->renderView("ArmazemBarBundle::Messages/message.html.twig", $response);
         return new Response(json_encode($response));
     }
     
@@ -121,14 +131,12 @@ class PratoController extends Controller
         
         if (is_null($id) || is_null($status)){
             $response['error'] = "Erro ao Alterar Status do prato, Status ou ID não enviado!";
-            return new Response(json_encode($response));
         } else {
             $strStatus = $status ? "Ativar" : "Desativar";
             $em = $this->getDoctrine()->getManager();
             $prato = $em->find(Prato::class, $id);
             if (is_null($prato)) {
                 $response['error'] = "Erro ao ".$strStatus.", prato não encontrado!";
-                return new Response(json_encode($response));
             } else {
                 if ($status) {
                     $prato->setAtivo(TRUE);
@@ -145,6 +153,7 @@ class PratoController extends Controller
                 }
             }
         }
+        $response['message'] = $this->renderView("ArmazemBarBundle::Messages/message.html.twig", $response);
         return new Response(json_encode($response));
 
     }

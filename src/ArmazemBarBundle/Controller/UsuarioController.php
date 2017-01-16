@@ -23,7 +23,13 @@ class UsuarioController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return array('incluido'=>$request->get('incluido'), 'alterado'=>$request->get('alterado'));
+        $success = "";
+        if ($request->getSession()->getFlashBag()->has("success")) {
+            $success = $request->getSession()->getFlashBag()->get("success");
+            $request->getSession()->getFlashBag()->clear();
+        }
+        
+        return array('success' => $success);
     }
 
     /**
@@ -70,7 +76,9 @@ class UsuarioController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($usuario);
             $em->flush();
-            return $this->redirectToRoute("usuario_index", ['incluido' => !($id>0), 'alterado'=> ($id>0)]);
+            $msg = $id==0 ? "Usuário <strong>incluído</strong>  com sucesso." : "Usuário <strong>alterado</strong> com sucesso.";
+            $request->getSession()->getFlashBag()->add("success", $msg);
+            return $this->redirectToRoute("usuario_index");
         }
         
         return array("usuario"=>$usuario, "form"=>$form->createView());
@@ -83,24 +91,25 @@ class UsuarioController extends Controller
     {
         $response   = array("ok"=>0);
         $id         = $resquest->get("id", null);
-        if (!is_null($id)) {
+        if (is_null($id)) {
+            $response['error'] = "Erro ao excluir usuário, ID vazio!";
+        } else {
             $em = $this->getDoctrine()->getManager();
             $usuario = $em->find(Usuario::class, $id);
-            
             if (is_null($usuario)) {
                 $response['error'] = "Erro ao excluir, usuário não encontrado!";
-                return new Response(json_encode($response));
+            } else {
+                try {
+                    $em->remove($usuario);
+                    $em->flush();
+                    $response['ok'] = 1;
+                    $response['success'] = "Usuário <strong>excluído</strong> com sucesso!";
+                } catch (Exception $exc) {
+                    $response['error'] = "Erro ao excluir usuário, problema com o banco de dados!";
+                }
             }
-            try {
-                $em->remove($usuario);
-                $em->flush();
-                $response['ok'] = 1;
-            } catch (Exception $exc) {
-                $response['error'] = "Erro ao excluir usuário, problema com o banco de dados!";
-            }
-        } else {
-            $response['error'] = "Erro ao excluir usuário, ID vazio!";
         }
+        $response['message'] = $this->renderView("ArmazemBarBundle::Messages/message.html.twig", $response);
         return new Response(json_encode($response));
     }
     
