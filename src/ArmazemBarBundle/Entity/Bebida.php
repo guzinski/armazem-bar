@@ -45,6 +45,13 @@ class Bebida extends BaseEntity
      * @ORM\OneToMany(targetEntity="PedidoBebida", mappedBy="bebida")
      **/
     private $pedidoBebidas;
+    
+    /**
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="CompraBebida", mappedBy="bebida")
+     **/
+    private $compraBebidas;
+
 
     
     public function __construct(Collection $pedidoBebidas)

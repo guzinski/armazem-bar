@@ -41,9 +41,7 @@ class Usuario extends BaseEntity implements UserInterface
      * @var Nivel
      *
      * @ORM\ManyToOne(targetEntity="Nivel", inversedBy="usuarios")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="nivel", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="nivel", referencedColumnName="id")
      */
     private $nivel;
 

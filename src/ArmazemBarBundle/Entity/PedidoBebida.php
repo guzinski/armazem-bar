@@ -17,9 +17,7 @@ class PedidoBebida extends BaseEntity
      * @var Pedido
      *
      * @ORM\ManyToOne(targetEntity="Pedido", inversedBy="pedidoBebidas")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pedido", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="pedido", referencedColumnName="id", nullable=false)
      */
     private $pedido;
     
@@ -28,9 +26,7 @@ class PedidoBebida extends BaseEntity
      * @var Prato
      *
      * @ORM\ManyToOne(targetEntity="Bebida", inversedBy="pedidoBebidas")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="prato", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="prato", referencedColumnName="id", nullable=false)
      */
     private $bebida;
 

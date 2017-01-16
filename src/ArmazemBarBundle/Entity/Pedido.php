@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Pedido extends BaseEntity
 {
-    
     const FILA = "F";
     const PRODUCAO = "P";
     const CONCLUIDO = "C";
