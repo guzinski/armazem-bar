@@ -1,29 +1,16 @@
 {% extends "ArmazemBarBundle::layout.html.twig" %}
 {% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
-{% block title %}Armazém Bar | Usuários{% endblock %}
+{% block title %}Armazém Bar | Pratos{% endblock %}
 {% block head %}
-    <link href="{{ asset('bundles/armazembar/css/basic.css') }}" rel="stylesheet" />
-    <link href="{{ asset('bundles/armazembar/css/dropzone.css') }}" rel="stylesheet" />
-    <link href="{{ asset('bundles/armazembar/css/bootstrap-wysihtml5.css') }}" rel="stylesheet" />
     <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/validate/additional-methods.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/jquery-ui-1.10.3.min.js') }}"></script>
-    <script src="{{ asset('bundles/armazembar/js/dropzone.min.js') }}"></script>
-    <script src="{{ asset('bundles/armazembar/js/select2.min.js') }}"></script>
-    <script src="{{ asset('bundles/armazembar/js/jquery.maskMoney.js') }}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery('#loading').hide();
-            jQuery('select').select2();
-            jQuery('.select2-container').removeClass("form-control").css("width", "100%")
 
-            jQuery("#basicForm").validate({
-                rules: {
-                    "usuario[email]":            {email: true},
-                    'usuario[senha][first]':     { minlength: 6 },
-                    'usuario[senha][second]':    { equalTo:  "#usuario_senha_first" },
-                },
+            jQuery("#form").validate({
                 highlight: function(element) {
                     jQuery(element).closest('.form-group').removeClass('has-success').addClass('has-error');
                 },
@@ -50,15 +37,15 @@
 <div class="pageheader">
     <div class="media">
         <div class="pageicon pull-left">
-            <i class="fa fa-user"></i>
+            <i class="fa fa-cutlery"></i>
         </div>
         <div class="media-body">
             <ul class="breadcrumb">
                 <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
-                <li><a href="{{ path('usuario_index') }}">Usuário</a></li>
-                <li>{{ usuario.getid>0 ? "Editar" : "Cadastrar" }} Usuário</li>
+                <li><a href="{{ path('prato_index') }}">Pratos</a></li>
+                <li>{{ prato.getid>0 ? "Editar" : "Cadastrar" }} Prato</li>
             </ul>
-            <h4>{{ usuario.getid>0 ? "Editar" : "Cadastrar" }} Usuário</h4>
+            <h4>{{ prato.getid>0 ? "Editar" : "Cadastrar" }} Prato</h4>
         </div>
     </div><!-- media -->
 </div><!-- pageheader -->
@@ -66,16 +53,13 @@
 <div class="contentpanel">
     <div class="row">
         <div class="col-md-12">
-            <form method="POST" class="form-horizontal form-bordered" id="basicForm" action="">
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="row">
-                        {{ form_row(form.nome) }}
-                        {{ form_row(form.email) }}
-                        {{ form_row(form.senha) }}
-                        {{ form_row(form.nivel) }}
-                        {{ form_row(form._token) }}
-                        {{ form_errors(form) }}
+                        {{ form_row(form.descricao) }}
+                        {{ form_row(form.ativo) }}
                     </div><!-- row -->
                 </div><!-- panel-body -->
                 <div class="panel-footer">
@@ -88,7 +72,7 @@
                   </div>
                 </div><!-- panel-footer -->  
             </div><!-- panel -->
-            </form>
+            {{ form_end(form) }}
 
         </div><!-- col-md-12 -->
     </div><!-- row -->

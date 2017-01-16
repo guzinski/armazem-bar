@@ -23,7 +23,7 @@ class UsuarioController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return array('incluido'=>$request->get('incluido'));
+        return array('incluido'=>$request->get('incluido'), 'alterado'=>$request->get('alterado'));
     }
 
     /**
@@ -36,11 +36,11 @@ class UsuarioController extends Controller
         $dados = array();
         foreach ($usuarios as $usuario) {
             $linha = array();
-            
-            $linha[] = "<a href=\"".$this->generateUrl("usuario_form", array("id"=>$usuario->getId())) ."\">". $usuario->getNome() ."</a>";
-            $linha[] = $usuario->getEmail();
-            $linha[] = "<a href=\"javascript:excluirUsuario(".$usuario->getId() .");\"><i class=\"glyphicon glyphicon-trash\"></a>";
-            $dados[] = $linha;
+            $dados[] = [
+                "<a href=\"".$this->generateUrl("usuario_form", array("id"=>$usuario->getId())) ."\"><span class=\"h4\">". $usuario->getNome() ."</span></a>",
+                $usuario->getEmail(),
+                "<a title=\"Excluir\" class=\"btn btn-default btn-sm\" href=\"javascript:excluir(".$usuario->getId() .");\"><i class=\"glyphicon glyphicon-trash\"></i></a>",
+            ];
         }
         $return['recordsTotal'] = count($usuarios);
         $return['recordsFiltered'] = count($usuarios);
@@ -67,10 +67,10 @@ class UsuarioController extends Controller
         $form = $this->createForm(UsuarioType::class, $usuario);
         
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($usuario);
             $em->flush();
-            return $this->redirectToRoute("usuario_index", ['incluido' => true]);
+            return $this->redirectToRoute("usuario_index", ['incluido' => !($id>0), 'alterado'=> ($id>0)]);
         }
         
         return array("usuario"=>$usuario, "form"=>$form->createView());
@@ -81,19 +81,27 @@ class UsuarioController extends Controller
      */
     public function excluiAction(Request $resquest) 
     {
-        $respone = array();
-        $id = $resquest->request->getInt("id", null);
-        if (null != $id) {
+        $response   = array("ok"=>0);
+        $id         = $resquest->get("id", null);
+        if (!is_null($id)) {
             $em = $this->getDoctrine()->getManager();
             $usuario = $em->find(Usuario::class, $id);
-            $em->remove($usuario);
-            $em->flush();
-            $respone['ok'] = 1;
+            
+            if (is_null($usuario)) {
+                $response['error'] = "Erro ao excluir, usuário não encontrado!";
+                return new Response(json_encode($response));
+            }
+            try {
+                $em->remove($usuario);
+                $em->flush();
+                $response['ok'] = 1;
+            } catch (Exception $exc) {
+                $response['error'] = "Erro ao excluir usuário, problema com o banco de dados!";
+            }
         } else {
-            $respone['ok'] = 0;
-            $respone['error'] = "Erro ao exclui usuário";
+            $response['error'] = "Erro ao excluir usuário, ID vazio!";
         }
-        return new Response(json_encode($respone));
+        return new Response(json_encode($response));
     }
     
     /**

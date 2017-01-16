@@ -2,11 +2,13 @@
 
 namespace ArmazemBarBundle\Controller;
 
+use ArmazemBarBundle\Entity\Prato;
+use ArmazemBarBundle\Form\PratoType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Description of PratoController
@@ -20,9 +22,9 @@ class PratoController extends Controller
      * @Route("/", name="prato_index")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        return [];
+        return array('incluido'=>$request->get('incluido'), 'alterado'=>$request->get('alterado'));
     }
     
     /**
@@ -31,13 +33,17 @@ class PratoController extends Controller
      */
     public function paginationAction()
     {
-        $pratos = $this->getDoctrine()->getRepository(\ArmazemBarBundle\Entity\Prato::class)->findAll();
+        $pratos = $this->getDoctrine()->getRepository(Prato::class)->findAll();
         $dados = array();
         foreach ($pratos as $prato) {
-            /* @var $prato \ArmazemBarBundle\Entity\Prato  */
+            /* @var $prato Prato  */
+            $btnStatus = $prato->getAtivo() ? 
+                    "<a title=\"Desativar\" class=\"btn btn-default btn-sm\" href=\"javascript:trocarStatus(".$prato->getId() .", 0);\"><i class=\"fa fa-remove\"></i></a>"
+                    : "<a title=\"Ativar\" class=\"btn btn-default btn-sm\" href=\"javascript:trocarStatus(".$prato->getId() .", 1);\"><i class=\"fa fa-check\"></i></a>";
             $dados[] = [
-                "<a href=\"".$this->generateUrl("prato_form", array("id"=>$prato->getId())) ."\">". $prato->getDescricao() ."</a>",
-                "<a href=\"javascript:excluir(".$prato->getId() .");\"><i class=\"glyphicon glyphicon-trash\"></a>",
+                "<a href=\"".$this->generateUrl("prato_form", array("id"=>$prato->getId())) ."\"><span class=\"h4\">". $prato->getDescricao() ."</span></a>",
+                $prato->getAtivo() ? "<em class='fa fa-check'></em>" : "<em class='fa fa-remove'></em>",
+                "<div class=\"btn-group\">".$btnStatus."<a title=\"Excluir\" class=\"btn btn-default btn-sm\" href=\"javascript:excluir(".$prato->getId() .");\"><i class=\"glyphicon glyphicon-trash\"></i></a></div>",
             ];
         }
         $return['recordsTotal'] = count($pratos);
@@ -53,7 +59,24 @@ class PratoController extends Controller
      */
     public function formAction(Request $request, $id = 0) 
     {
-        return [];
+        $em = $this->getDoctrine()->getManager();
+        
+        if ($id>0) {
+            $prato = $em->find(Prato::class, $id);
+        } else {
+            $prato = new Prato();
+        }
+        
+        $form = $this->createForm(PratoType::class, $prato);
+        
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($prato);
+            $em->flush();
+            return $this->redirectToRoute("prato_index", ['incluido' => !($id>0), 'alterado'=> ($id>0)]);
+        }
+        
+        return array("prato"=>$prato, "form"=>$form->createView());
     }
     
     /**
@@ -61,7 +84,69 @@ class PratoController extends Controller
      */
     public function excluiAction(Request $resquest) 
     {
-        return [];
+        $response   = array('ok'=>0);
+        $id         = $resquest->get("id");
+        if (!is_null($id)) {
+            $em = $this->getDoctrine()->getManager();
+            $prato = $em->find(Prato::class, $id);
+            if (is_null($prato)) {
+                $response['error'] = "Erro ao excluir, prato não encontrado!";
+                return new Response(json_encode($response));
+            }
+            if ($prato->getPedidoPratos()->count()>0){
+                $response['error'] = "Não é possível excluir o prato, existem Pedidos vinculados!";
+                return new Response(json_encode($response));
+            }
+            try {
+                $em->remove($prato);
+                $em->flush();
+                $response['ok'] = 1;
+            } catch (Exception $exc) {
+                $response['error'] = "Erro ao excluir prato, problema com o banco de dados!";
+            }
+        } else {
+            $response['error'] = "Erro ao excluir prato, ID vazio!";
+        }
+        return new Response(json_encode($response));
+    }
+    
+    /**
+     * @Route("/alterarStatus", name="prato_status")
+     */
+    public function statusAction(Request $resquest) 
+    {
+        $response   = array('ok'=>0);
+        $id         = $resquest->get("id");
+        $status     = $resquest->get("status");
+        
+        if (is_null($id) || is_null($status)){
+            $response['error'] = "Erro ao Alterar Status do prato, Status ou ID não enviado!";
+            return new Response(json_encode($response));
+        } else {
+            $strStatus = $status ? "Ativar" : "Desativar";
+            $em = $this->getDoctrine()->getManager();
+            $prato = $em->find(Prato::class, $id);
+            if (is_null($prato)) {
+                $response['error'] = "Erro ao ".$strStatus.", prato não encontrado!";
+                return new Response(json_encode($response));
+            } else {
+                if ($status) {
+                    $prato->setAtivo(TRUE);
+                } else {
+                    $prato->setAtivo(FALSE);
+                }
+                
+                try {
+                    $em->merge($prato);
+                    $em->flush();
+                    $response['ok'] = 1;
+                } catch (Exception $exc) {
+                    $response['error'] = "Erro ao ".$strStatus.", prato não encontrado!";
+                }
+            }
+        }
+        return new Response(json_encode($response));
+
     }
 
     

@@ -26,6 +26,14 @@ class Bebida extends BaseEntity
     private $descricao;
     
     /**
+     * @var string
+     *
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $ativo = TRUE;
+
+    
+    /**
      * @var int
      *
      * @ORM\Column(type="integer", nullable=false)
@@ -77,7 +85,17 @@ class Bebida extends BaseEntity
         return $this;
     }
 
-    
+    public function getAtivo()
+    {
+        return $this->ativo;
+    }
+
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
+        return $this;
+    }
+        
     public function getLabel()
     {
         return $this->descricao;

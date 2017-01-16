@@ -19,6 +19,15 @@
 {% endspaceless %}
 {% endblock radio_widget %}
 
+{% block checkbox_widget %}
+{% spaceless %}
+    <div class="ckbox ckbox-default">
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        <label  for="{{ id }}">{{ label|trans }}</label>
+    </div>
+{% endspaceless %}
+{% endblock checkbox_widget %}
+
 
 
 {% block integer_widget %}
@@ -46,11 +55,7 @@
     {% spaceless %}
         {% if errors|length > 0 %}
             {% for error in errors %}
-                <div class="row">
-                    <div class="alert alert-danger">
-                        <label class="error">{{ error.message }}</label>
-                    </div>
-                </div>
+                <label class="error">{{ error.message }}</label>
             {% endfor %}
         {% endif %}
     {% endspaceless %}
