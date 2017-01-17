@@ -43,7 +43,7 @@ class UsuarioController extends Controller
         foreach ($usuarios as $usuario) {
             $linha = array();
             $dados[] = [
-                "<a href=\"".$this->generateUrl("usuario_form", array("id"=>$usuario->getId())) ."\"><span class=\"h4\">". $usuario->getNome() ."</span></a>",
+                "<a title=\"Editar\"  href=\"".$this->generateUrl("usuario_form", array("id"=>$usuario->getId())) ."\"><span class=\"h4\">". $usuario->getNome() ."</span></a>",
                 $usuario->getEmail(),
                 "<a title=\"Excluir\" class=\"btn btn-default btn-sm\" href=\"javascript:excluir(".$usuario->getId() .");\"><i class=\"glyphicon glyphicon-trash\"></i></a>",
             ];

@@ -27,7 +27,7 @@ class CompraBebidaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('bebida', EntityType::class, [
-            'placeholder'   => "Selecione",
+            'placeholder'   => "Selecione a Bebida",
             'class'         => Bebida::class,
             'query_builder' => function (EntityRepository $er) {
                 $query = $er->createQueryBuilder('B');
@@ -35,7 +35,9 @@ class CompraBebidaType extends AbstractType
                     ->orderBy('B.descricao', 'ASC');
             },
         ]);
-        $builder->add('quantidade', NumberType::class);
+        $builder->add('quantidade', NumberType::class, [
+            'attr' => ['placeholder' => "Quantidade"],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

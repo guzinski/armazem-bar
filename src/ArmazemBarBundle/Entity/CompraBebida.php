@@ -18,7 +18,7 @@ class CompraBebida extends BaseEntity
     /**
      * @var Bebida
      *
-     * @ORM\ManyToOne(targetEntity="Bebida", inversedBy="compraBebidas")
+     * @ORM\ManyToOne(targetEntity="Bebida", inversedBy="compraBebidas",  fetch="EAGER")
      * @ORM\JoinColumn(name="bebida", referencedColumnName="id", nullable=false)
      */
     private $bebida;

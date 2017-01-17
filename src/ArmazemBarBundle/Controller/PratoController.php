@@ -47,7 +47,7 @@ class PratoController extends Controller
                     "<a title=\"Desativar\" class=\"btn btn-default btn-sm\" href=\"javascript:trocarStatus(".$prato->getId() .", 0);\"><i class=\"fa fa-remove\"></i></a>"
                     : "<a title=\"Ativar\" class=\"btn btn-default btn-sm\" href=\"javascript:trocarStatus(".$prato->getId() .", 1);\"><i class=\"fa fa-check\"></i></a>";
             $dados[] = [
-                "<a href=\"".$this->generateUrl("prato_form", array("id"=>$prato->getId())) ."\"><span class=\"h4\">". $prato->getDescricao() ."</span></a>",
+                "<a title=\"Editar\"  href=\"".$this->generateUrl("prato_form", array("id"=>$prato->getId())) ."\"><span class=\"h4\">". $prato->getDescricao() ."</span></a>",
                 $prato->getAtivo() ? "<em class='fa fa-check'></em>" : "<em class='fa fa-remove'></em>",
                 "<div class=\"btn-group\">".$btnStatus."<a title=\"Excluir\" class=\"btn btn-default btn-sm\" href=\"javascript:excluir(".$prato->getId() .");\"><i class=\"glyphicon glyphicon-trash\"></i></a></div>",
             ];

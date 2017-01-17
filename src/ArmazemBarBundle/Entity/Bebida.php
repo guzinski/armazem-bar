@@ -124,6 +124,22 @@ class Bebida extends BaseEntity
         return $this;
     }
 
+    
+    public function getQuantidadeEstoque()
+    {
+        $quantidade = $this->quantidadeInicial;
+        
+        foreach ($this->getCompraBebidas() as $compraBebida) {
+            /* @var $compraBebida CompraBebida */
+            $quantidade += $compraBebida->getQuantidade();
+        }
+        foreach ($this->getPedidoBebidas() as $pedidoBebida) {
+            /* @var $pedidoBebida PedidoBebida */
+            $quantidade -= $pedidoBebida->getQuantidade();
+        }
+        
+        return $quantidade;
+    }
 
     
 

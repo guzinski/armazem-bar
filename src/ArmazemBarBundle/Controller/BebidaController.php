@@ -53,7 +53,8 @@ class BebidaController extends Controller
                     "<a title=\"Desativar\" class=\"btn btn-default btn-sm\" href=\"javascript:trocarStatus(".$bebida->getId() .", 0);\"><i class=\"fa fa-remove\"></i></a>"
                     : "<a title=\"Ativar\" class=\"btn btn-default btn-sm\" href=\"javascript:trocarStatus(".$bebida->getId() .", 1);\"><i class=\"fa fa-check\"></i></a>";
             $dados[] = [
-                "<a href=\"".$this->generateUrl("bebida_form", array("id"=>$bebida->getId())) ."\"><span class=\"h4\">". $bebida->getDescricao() ."</span></a>",
+                "<a title=\"Editar\" href=\"".$this->generateUrl("bebida_form", array("id"=>$bebida->getId())) ."\"><span class=\"h4\">". $bebida->getDescricao() ."</span></a>",
+                "<h5>". $bebida->getQuantidadeEstoque() ."</h5>",
                 $bebida->getAtivo() ? "<em class='fa fa-check'></em>" : "<em class='fa fa-remove'></em>",
                 "<div class=\"btn-group\">".$btnStatus."<a title=\"Excluir\" class=\"btn btn-default btn-sm\" href=\"javascript:excluir(".$bebida->getId() .");\"><i class=\"glyphicon glyphicon-trash\"></i></a></div>",
             ];

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description of Compra
  * @ORM\Table(name="compra")
- * @ORM\Entity
+ * @ORM\Entity()
  */
 class Compra extends BaseEntity
 {
@@ -23,7 +23,7 @@ class Compra extends BaseEntity
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="CompraBebida", cascade={"all"}, mappedBy="compra")
+     * @ORM\OneToMany(targetEntity="CompraBebida", cascade={"all"}, mappedBy="compra", fetch="EAGER")
      **/
     private $compraBebidas;
     
@@ -33,6 +33,10 @@ class Compra extends BaseEntity
         $this->compraBebidas = new ArrayCollection();
     }
 
+    /**
+     * 
+     * @return \DateTime
+     */
     public function getData()
     {
         return $this->data;
@@ -43,7 +47,7 @@ class Compra extends BaseEntity
         return $this->compraBebidas;
     }
 
-    public function setData($data)
+    public function setData(\DateTime $data)
     {
         $this->data = $data;
         return $this;
