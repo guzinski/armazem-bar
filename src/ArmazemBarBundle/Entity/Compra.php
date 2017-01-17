@@ -23,7 +23,7 @@ class Compra extends BaseEntity
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="CompraBebida", mappedBy="compra")
+     * @ORM\OneToMany(targetEntity="CompraBebida", cascade={"all"}, mappedBy="compra")
      **/
     private $compraBebidas;
     
@@ -57,6 +57,18 @@ class Compra extends BaseEntity
     public function getLabel()
     {
         return $this->id;
+    }
+    
+    
+    public function addCompraBebida(CompraBebida $compraBebida)
+    {
+        $this->getCompraBebidas()->add($compraBebida);
+        $compraBebida->setCompra($this);
+    }
+    
+    public function removeCompraBebida(CompraBebida $compraBebida)
+    {
+        
     }
     
 }

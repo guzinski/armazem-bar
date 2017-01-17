@@ -1,0 +1,85 @@
+{% extends "ArmazemBarBundle::layout.html.twig" %}
+{% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
+{% block title %}Armazém Bar | Compras{% endblock %}
+{% block head %}
+    <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/validate/additional-methods.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery-ui-1.10.3.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery.maskedinput.min.js') }}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery('#compra_data').datepicker().mask("99/99/9999");
+            jQuery('#loading').hide();
+            jQuery("#bebida_quantidadeInicial").keyup(function () {
+                var valor = jQuery(this).val();
+                jQuery(this).val(valor.replace(/[^\d]/gi, ""));
+            }).spinner({min: 0});
+
+            jQuery("#form").validate({
+                highlight: function(element) {
+                    jQuery(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                success: function(element) {
+                    jQuery(element).closest('.form-group').removeClass('has-error');
+                },
+                errorPlacement: function(error, element) {
+                    jQuery(element).closest('.form-group').append(error);
+                },
+                validClass: "",
+                submitHandler: function(form) {
+                    jQuery("#salvar").hide();
+                    jQuery('#loading').show();
+                    form.submit();
+               }
+            });
+            
+        });
+        
+    </script>
+{% endblock %}
+
+{% block mainpanel %}
+<div class="pageheader">
+    <div class="media">
+        <div class="pageicon pull-left">
+            <i class="fa fa-glass"></i>
+        </div>
+        <div class="media-body">
+            <ul class="breadcrumb">
+                <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a href="{{ path('bebida_index') }}">Compras</a></li>
+                <li>{{ compra.getid>0 ? "Editar" : "Cadastrar" }} Compra</li>
+            </ul>
+            <h4>{{ compra.getid>0 ? "Editar" : "Cadastrar" }} Compra</h4>
+        </div>
+    </div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+    <div class="row">
+        <div class="col-md-12">
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row" data-prototype="{{ form_widget(form.compraBebidas.vars.prototype)|e('html_attr') }}">
+                        {{ form_row(form.data) }}
+                    </div><!-- row -->
+                </div><!-- panel-body -->
+                <div class="panel-footer">
+                  <div class="row">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <img src="{{ asset('bundles/armazembar/images/loading.gif') }}" id="loading" alt="Carregando" />
+                        <button id="salvar" class="btn btn-primary mr5">Salvar</button>
+                        <button type="button" onclick="history.back()" class="btn btn-default mr5">Cancelar</button>
+                    </div>
+                  </div>
+                </div><!-- panel-footer -->  
+            </div><!-- panel -->
+            {{ form_end(form) }}
+
+        </div><!-- col-md-12 -->
+    </div><!-- row -->
+</div><!-- contentpanel -->
+{% endblock %}
