@@ -10,7 +10,7 @@
         jQuery(document).ready(function(){
             jQuery('#loading').hide();
 
-            jQuery("#form").validate({
+            jQuery("form").validate({
                 highlight: function(element) {
                     jQuery(element).closest('.form-group').removeClass('has-success').addClass('has-error');
                 },
@@ -53,7 +53,7 @@
 <div class="contentpanel">
     <div class="row">
         <div class="col-md-12">
-            {{ form_start(form) }}
+            {{ form_start(form, {'attr' : {'class' : 'form-horizontal form-bordered'}}) }}
             {{ form_errors(form) }}
             <div class="panel panel-default">
                 <div class="panel-body">

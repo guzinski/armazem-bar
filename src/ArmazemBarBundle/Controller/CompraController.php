@@ -40,13 +40,12 @@ class CompraController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-//        if ($id>0) {
-//            $bebida = $em->find(Bebida::class, $id);
-//        } else {
-//            $bebida = new Bebida();
-//        }
+        if ($id>0) {
+            $compra = $em->find(Compra::class, $id);
+        } else {
+            $compra = new Compra();
+        }
         
-        $compra = new Compra();
         $form = $this->createForm(CompraType::class, $compra);
         
         $form->handleRequest($request);

@@ -40,3 +40,4 @@ security:
         - { path: ^/usuario,        roles: ROLE_USUARIO }
         - { path: ^/prato,          roles: ROLE_PRATO }
         - { path: ^/bebida,         roles: ROLE_BEBIDA }
+        - { path: ^/compra,         roles: ROLE_COMPRA }

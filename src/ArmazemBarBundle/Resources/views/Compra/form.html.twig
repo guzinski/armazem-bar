@@ -1,5 +1,7 @@
 {% extends "ArmazemBarBundle::layout.html.twig" %}
 {% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
+{% form_theme form.compraBebidas 'ArmazemBarBundle:Form:comprabebidas.html.twig' %}
+
 {% block title %}Armazém Bar | Compras{% endblock %}
 {% block head %}
     <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
@@ -7,8 +9,69 @@
     <script src="{{ asset('bundles/armazembar/js/validate/additional-methods.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/jquery-ui-1.10.3.min.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/jquery.maskedinput.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/select2.min.js') }}"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function(){
+        
+        
+        var $compraBebidas;
+
+        function addTagForm($collectionHolder) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            var $newForm = jQuery(prototype.replace(/__name__/g, index));
+
+            $collectionHolder.data('index', index + 1);
+            $newForm.find('input').keyup(function () {
+                var valor = jQuery(this).val();
+                jQuery(this).val(valor.replace(/[^\d]/gi, ""));
+            }).spinner({min: 1});
+            
+            $newForm.find('select').select2({minimumResultsForSearch: -1,});
+
+            addTagFormDeleteLink($newForm);
+            $collectionHolder.append($newForm);
+            jQuery('.select2-container').css("width", "100%");
+
+        }
+        
+        function addTagFormDeleteLink($newForm) {
+            var $removeForm = jQuery('<a class="btn btn-default" href="#"><em class="fa fa-remove" ></em></a>');
+            var $div = jQuery("<div class='col-sm-3'></div>");
+            $div.append($removeForm);
+            $newForm.append($removeForm);
+
+            $removeForm.on('click', function(e) {
+                e.preventDefault();
+                jQuery(this).parent().remove();
+            });
+        }
+
+
+        
+        
+        
+        jQuery(document).ready(function () {
+            $compraBebidas = jQuery('#bebidas');
+            
+            $compraBebidas.find("input").keyup(function () {
+                var valor = jQuery(this).val();
+                jQuery(this).val(valor.replace(/[^\d]/gi, ""));
+            }).spinner({min: 1});
+
+            $compraBebidas.find('select').select2({minimumResultsForSearch: -1,});
+            jQuery('.select2-container').css("width", "100%");
+
+            $compraBebidas.data('index', $compraBebidas.find('div').length);
+
+            jQuery("#add-bebida").on('click', function(e) {
+                e.preventDefault();
+                addTagForm($compraBebidas);
+            });
+            
             jQuery('#compra_data').datepicker().mask("99/99/9999");
             jQuery('#loading').hide();
             jQuery("#bebida_quantidadeInicial").keyup(function () {
@@ -16,70 +79,95 @@
                 jQuery(this).val(valor.replace(/[^\d]/gi, ""));
             }).spinner({min: 0});
 
-            jQuery("#form").validate({
-                highlight: function(element) {
+            jQuery("form").validate({
+                highlight: function (element) {
                     jQuery(element).closest('.form-group').removeClass('has-success').addClass('has-error');
                 },
-                success: function(element) {
+                success: function (element) {
                     jQuery(element).closest('.form-group').removeClass('has-error');
                 },
-                errorPlacement: function(error, element) {
+                errorPlacement: function (error, element) {
                     jQuery(element).closest('.form-group').append(error);
                 },
                 validClass: "",
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     jQuery("#salvar").hide();
                     jQuery('#loading').show();
                     form.submit();
-               }
+                }
             });
-            
+
         });
-        
+
     </script>
 {% endblock %}
 
 {% block mainpanel %}
-<div class="pageheader">
-    <div class="media">
-        <div class="pageicon pull-left">
-            <i class="fa fa-glass"></i>
-        </div>
-        <div class="media-body">
-            <ul class="breadcrumb">
-                <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
-                <li><a href="{{ path('bebida_index') }}">Compras</a></li>
-                <li>{{ compra.getid>0 ? "Editar" : "Cadastrar" }} Compra</li>
-            </ul>
-            <h4>{{ compra.getid>0 ? "Editar" : "Cadastrar" }} Compra</h4>
-        </div>
-    </div><!-- media -->
-</div><!-- pageheader -->
+    <div class="pageheader">
+        <div class="media">
+            <div class="pageicon pull-left">
+                <i class="fa fa-sign-in"></i>
+            </div>
+            <div class="media-body">
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
+                    <li><a href="{{ path('compra_index') }}">Compras</a></li>
+                    <li>{{ compra.getid>0 ? "Editar" : "Cadastrar" }} Compra</li>
+                </ul>
+                <h4>{{ compra.getid>0 ? "Editar" : "Cadastrar" }} Compra</h4>
+            </div>
+        </div><!-- media -->
+    </div><!-- pageheader -->
 
-<div class="contentpanel">
-    <div class="row">
-        <div class="col-md-12">
-            {{ form_start(form) }}
-            {{ form_errors(form) }}
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row" data-prototype="{{ form_widget(form.compraBebidas.vars.prototype)|e('html_attr') }}">
+    <div class="contentpanel">
+        <div class="row">
+            <div class="col-md-12">
+                {{ form_start(form, {'attr' : {'class' : 'form-horizontal form-bordered'}}) }}
+                {{ form_errors(form) }}
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         {{ form_row(form.data) }}
-                    </div><!-- row -->
-                </div><!-- panel-body -->
-                <div class="panel-footer">
-                  <div class="row">
-                    <div class="col-sm-9 col-sm-offset-3">
-                        <img src="{{ asset('bundles/armazembar/images/loading.gif') }}" id="loading" alt="Carregando" />
-                        <button id="salvar" class="btn btn-primary mr5">Salvar</button>
-                        <button type="button" onclick="history.back()" class="btn btn-default mr5">Cancelar</button>
-                    </div>
-                  </div>
-                </div><!-- panel-footer -->  
-            </div><!-- panel -->
-            {{ form_end(form) }}
+                    </div><!-- panel-body -->
+                </div><!-- panel -->
 
-        </div><!-- col-md-12 -->
-    </div><!-- row -->
-</div><!-- contentpanel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <div class="row">
+                                <div class="col-sm-6">Bebidas</div>
+                                <div class="col-sm-6">
+                                    <button id="add-bebida" type="button" class="btn btn-success pull-right">Adicionar Bebidas</button>
+                                </div>
+                            </div>
+                        </h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div id="bebidas" data-prototype="{{ form_row(form.compraBebidas.vars.prototype)|e  }}" class="bebidas">
+                                {% for compraBebidas in form.compraBebidas %}
+                                    {{ form_row(compraBebidas) }}
+                                {% endfor %} 
+                             </div>
+                        </div>
+                    </div>
+                </div><!-- panel -->
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <img src="{{ asset('bundles/armazembar/images/loading.gif') }}" id="loading" alt="Carregando" />
+                                <button id="salvar" class="btn btn-primary mr5">Salvar</button>
+                                <button type="button" onclick="history.back()" class="btn btn-default mr5">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- panel -->
+
+
+                {{ form_end(form) }}
+
+            </div><!-- col-md-12 -->
+        </div><!-- row -->
+    </div><!-- contentpanel -->
 {% endblock %}

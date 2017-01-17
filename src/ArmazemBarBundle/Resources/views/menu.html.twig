@@ -16,6 +16,9 @@
         {% if is_granted('ROLE_BEBIDA') %}
         <li class="{% if 'bebida' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('bebida_index') }}"><i class="fa fa-glass"></i> <span>Bebidas</span></a></li>
         {% endif  %}
+        {% if is_granted('ROLE_COMPRA') %}
+        <li class="{% if 'compra' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('compra_form') }}"><i class="fa fa-sign-in"></i> <span>Compra de bebidas</span></a></li>
+        {% endif  %}
     </ul>
 
 </div><!-- leftpanel -->

@@ -26,6 +26,7 @@ class UsuarioData implements FixtureInterface
         $nivel->getPermissoes()->add(new Permissao("Pratos", "PRATO"));
         $nivel->getPermissoes()->add(new Permissao("Bebidas", "BEBIDA"));
         $nivel->getPermissoes()->add(new Permissao("Cozinha", "COZINHA"));
+        $nivel->getPermissoes()->add(new Permissao("Compra", "COMPRA"));
 
         $manager->persist($nivel);
         
