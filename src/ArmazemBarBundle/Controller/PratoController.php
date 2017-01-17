@@ -58,7 +58,7 @@ class PratoController extends Controller
         return new Response(json_encode($return));
     }
 
-        /**
+    /**
      * 
      * @Route("/editar/{id}", name="prato_form")
      * @Template()
@@ -79,7 +79,7 @@ class PratoController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($prato);
             $em->flush();
-            $msg = $id==0 ? "Prato <strong>incluído</strong>  com sucesso." : "Prato <strong>alterado</strong> com sucesso.";
+            $msg = $id==0 ? "Prato <strong>incluído</strong> com sucesso." : "Prato <strong>alterado</strong> com sucesso.";
             $request->getSession()->getFlashBag()->add("success", $msg);
             return $this->redirectToRoute("prato_index");
         }
@@ -130,7 +130,7 @@ class PratoController extends Controller
         $status     = $resquest->get("status");
         
         if (is_null($id) || is_null($status)){
-            $response['error'] = "Erro ao Alterar Status do prato, Status ou ID não enviado!";
+            $response['error'] = "Erro ao Alterar Status do prato, Status ou ID não enviados!";
         } else {
             $strStatus = $status ? "Ativar" : "Desativar";
             $em = $this->getDoctrine()->getManager();
@@ -148,8 +148,9 @@ class PratoController extends Controller
                     $em->merge($prato);
                     $em->flush();
                     $response['ok'] = 1;
+                    $response['success'] = "O Status do Prato foi alterado com sucesso.";
                 } catch (Exception $exc) {
-                    $response['error'] = "Erro ao ".$strStatus.", prato não encontrado!";
+                    $response['error'] = "Erro ao ".$strStatus.", prato, problema no banco de dados!";
                 }
             }
         }

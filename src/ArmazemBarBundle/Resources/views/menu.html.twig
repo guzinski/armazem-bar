@@ -13,6 +13,9 @@
         {% if is_granted('ROLE_PRATO') %}
         <li class="{% if 'prato' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('prato_index') }}"><i class="fa fa-cutlery"></i> <span>Pratos</span></a></li>
         {% endif  %}
+        {% if is_granted('ROLE_BEBIDA') %}
+        <li class="{% if 'bebida' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('bebida_index') }}"><i class="fa fa-glass"></i> <span>Bebidas</span></a></li>
+        {% endif  %}
     </ul>
 
 </div><!-- leftpanel -->

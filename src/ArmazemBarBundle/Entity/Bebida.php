@@ -5,6 +5,7 @@ namespace ArmazemBarBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
@@ -12,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * 
  * @ORM\Table(name="bebida")
  * @ORM\Entity
+ * @UniqueEntity(fields="descricao", message="Já existe uma bebida cadastrada com essa Descrição")
  * @author Luciano
  */
 class Bebida extends BaseEntity
@@ -54,9 +56,11 @@ class Bebida extends BaseEntity
 
 
     
-    public function __construct(Collection $pedidoBebidas)
+    public function __construct()
     {
+        parent::__construct();
         $this->pedidoBebidas = new ArrayCollection();
+        $this->compraBebidas = new ArrayCollection();
     }
 
     public function getDescricao()
@@ -106,6 +110,18 @@ class Bebida extends BaseEntity
     public function getLabel()
     {
         return $this->descricao;
+    }
+
+
+    public function getCompraBebidas()
+    {
+        return $this->compraBebidas;
+    }
+
+    public function setCompraBebidas(Collection $compraBebidas)
+    {
+        $this->compraBebidas = $compraBebidas;
+        return $this;
     }
 
 
