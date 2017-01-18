@@ -43,8 +43,9 @@ class Pedido extends BaseEntity
      **/
     private $pedidoBebidas;
     
-    public function __construct(Collection $pedidoProdutos, Collection $pedidoBebida)
+    public function __construct()
     {
+        parent::__construct();
         $this->pedidoProdutos = new ArrayCollection();
         $this->pedidoBebidas = new ArrayCollection();
     }
@@ -96,6 +97,28 @@ class Pedido extends BaseEntity
     public function getLabel()
     {
         return $this->id;
+    }
+
+    public function addPedidoProduto(PedidoProduto $pedidoProduto)
+    {
+        $this->getPedidoProdutos()->add($pedidoProduto);
+        $pedidoProduto->setPedido($this);
+    }
+    
+    public function removePedidoProduto(PedidoProduto $pedidoProduto)
+    {
+        
+    }
+    
+    public function addPedidoBebida(PedidoBebida $pedidoBebida)
+    {
+        $this->getPedidoBebidas()->add($pedidoBebida);
+        $pedidoBebida->setPedido($this);
+    }
+    
+    public function removePedidoBebida(PedidoBebida $pedidoProduto)
+    {
+        
     }
     
 }

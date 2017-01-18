@@ -1,8 +1,9 @@
 {% extends "ArmazemBarBundle::layout.html.twig" %}
 {% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
-{% form_theme form.compraBebidas 'ArmazemBarBundle:Form:comprabebidas.html.twig' %}
+{% form_theme form.pedidoProdutos 'ArmazemBarBundle:Form:pedido.html.twig' %}
+{% form_theme form.pedidoBebidas 'ArmazemBarBundle:Form:comprabebidas.html.twig' %}
 
-{% block title %}Do Armazêm Bar | Compras{% endblock %}
+{% block title %}Do Armazêm Bar | Novo Pedido{% endblock %}
 {% block head %}
     <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
@@ -13,7 +14,8 @@
     <script type="text/javascript">
         
         
-        var $compraBebidas;
+        var $pedidoBebidas;
+        var $pedidoProdutos;
 
         function addTagForm($collectionHolder) {
             // Get the data-prototype explained earlier
@@ -50,30 +52,26 @@
             });
         }
 
-
-        
-        
-        
         jQuery(document).ready(function () {
-            $compraBebidas = jQuery('#bebidas');
+            $pedidoBebidas = jQuery('#bebidas');
+            $pedidoProdutos = jQuery('#produtos');
             
-            $compraBebidas.find("input").keyup(function () {
-                var valor = jQuery(this).val();
-                jQuery(this).val(valor.replace(/[^\d]/gi, ""));
-            }).spinner({min: 1});
 
-            $compraBebidas.find('select').select2({minimumResultsForSearch: -1,});
-            jQuery('.select2-container').css("width", "100%");
-
-            $compraBebidas.data('index', $compraBebidas.find('div').length);
+            $pedidoBebidas.data('index', '0');
+            $pedidoProdutos.data('index', '0');
 
             jQuery("#add-bebida").on('click', function(e) {
                 e.preventDefault();
-                addTagForm($compraBebidas);
+                addTagForm($pedidoBebidas);
             });
             
-            jQuery('#compra_data').datepicker().mask("99/99/9999");
+            jQuery("#add-produto").on('click', function(e) {
+                e.preventDefault();
+                addTagForm($pedidoProdutos);
+            });
+            
             jQuery('#loading').hide();
+
             jQuery("form").validate({
                 highlight: function (element) {
                     jQuery(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -106,10 +104,10 @@
             <div class="media-body">
                 <ul class="breadcrumb">
                     <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
-                    <li><a href="{{ path('compra_index') }}">Compras</a></li>
-                    <li>{{ compra.getid>0 ? "Editar" : "Cadastrar" }} Compra</li>
+                    <li><a href="#">Pedidos</a></li>
+                    <li>Novo Pedido</li>
                 </ul>
-                <h4>{{ compra.getid>0 ? "Editar" : "Cadastrar" }} Compra</h4>
+                <h4>Novo Pedido</h4>
             </div>
         </div><!-- media -->
     </div><!-- pageheader -->
@@ -119,12 +117,6 @@
             <div class="col-md-12">
                 {{ form_start(form, {'attr' : {'class' : 'form-horizontal form-bordered'}}) }}
                 {{ form_errors(form) }}
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        {{ form_row(form.data) }}
-                    </div><!-- panel-body -->
-                </div><!-- panel -->
-
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h2 class="panel-title">
@@ -138,9 +130,30 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div id="bebidas" data-prototype="{{ form_row(form.compraBebidas.vars.prototype)|e  }}" class="bebidas">
-                                {% for compraBebidas in form.compraBebidas %}
-                                    {{ form_row(compraBebidas) }}
+                            <div id="bebidas" data-prototype="{{ form_row(form.pedidoBebidas.vars.prototype)|e  }}" class="bebidas">
+                                {% for pedidoBebidas in form.pedidoBebidas %}
+                                    {{ form_row(pedidoBebidas) }}
+                                {% endfor %} 
+                             </div>
+                        </div>
+                    </div>
+                </div><!-- panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <div class="row">
+                                <div class="col-sm-6">Produtos</div>
+                                <div class="col-sm-6">
+                                    <button id="add-produto" type="button" class="btn btn-success pull-right">Adicionar Produtos</button>
+                                </div>
+                            </div>
+                        </h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div id="produtos" data-prototype="{{ form_row(form.pedidoProdutos.vars.prototype)|e  }}" class="bebidas">
+                                {% for pedidoProduto in form.pedidoProdutos %}
+                                    {{ form_row(pedidoProduto) }}
                                 {% endfor %} 
                              </div>
                         </div>
@@ -158,8 +171,6 @@
                         </div>
                     </div>
                 </div><!-- panel -->
-
-
                 {{ form_end(form) }}
 
             </div><!-- col-md-12 -->
