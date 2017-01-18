@@ -15,13 +15,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
- * Description of Prato
- * @ORM\Table(name="prato")
+ * Description of Produto
+ * @ORM\Table(name="produto")
  * @ORM\Entity
- * @UniqueEntity(fields="descricao", message="Já existe um prato cadastrado com essa Descrição")
+ * @UniqueEntity(fields="descricao", message="Já existe um produto cadastrado com essa Descrição")
  * @author Luciano
  */
-class Prato extends BaseEntity
+class Produto extends BaseEntity
 {
     
     /**
@@ -41,14 +41,14 @@ class Prato extends BaseEntity
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="PedidoPrato", mappedBy="prato")
+     * @ORM\OneToMany(targetEntity="PedidoProduto", mappedBy="produto")
      **/
-    private $pedidoPratos;
+    private $pedidoProdutos;
     
     public function __construct()
     {
         parent::__construct();
-        $this->pedidoPratos = new ArrayCollection();
+        $this->pedidoProdutos = new ArrayCollection();
     }
 
     
@@ -64,14 +64,14 @@ class Prato extends BaseEntity
         return $this;
     }
     
-    public function getPedidoPratos()
+    public function getPedidoProdutos()
     {
-        return $this->pedidoPratos;
+        return $this->pedidoProdutos;
     }
 
-    public function setPedidoPratos(Collection $pedidoPratos)
+    public function setPedidoProdutos(Collection $pedidoProdutos)
     {
-        $this->pedidoPratos = $pedidoPratos;
+        $this->pedidoProdutos = $pedidoProdutos;
         return $this;
     }
 

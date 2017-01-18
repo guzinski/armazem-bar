@@ -23,10 +23,10 @@ class PedidoBebida extends BaseEntity
     
     
     /**
-     * @var Prato
+     * @var Produto
      *
      * @ORM\ManyToOne(targetEntity="Bebida", inversedBy="pedidoBebidas")
-     * @ORM\JoinColumn(name="prato", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="produto", referencedColumnName="id", nullable=false)
      */
     private $bebida;
 
@@ -59,7 +59,7 @@ class PedidoBebida extends BaseEntity
         return $this;
     }
 
-    public function setBebida(Prato $bebida)
+    public function setBebida(Produto $bebida)
     {
         $this->bebida = $bebida;
         return $this;

@@ -38,6 +38,6 @@ security:
     access_control:
         - { path: ^/login,          roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/usuario,        roles: ROLE_USUARIO }
-        - { path: ^/prato,          roles: ROLE_PRATO }
+        - { path: ^/produto,        roles: ROLE_PRODUTO }
         - { path: ^/bebida,         roles: ROLE_BEBIDA }
         - { path: ^/compra,         roles: ROLE_COMPRA }

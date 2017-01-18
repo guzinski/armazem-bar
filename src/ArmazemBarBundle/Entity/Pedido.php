@@ -33,9 +33,9 @@ class Pedido extends BaseEntity
     
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="PedidoPrato", mappedBy="pedido")
+     * @ORM\OneToMany(targetEntity="PedidoProduto", mappedBy="pedido")
      **/
-    private $pedidoPratos;
+    private $pedidoProdutos;
 
     /**
      * @var Collection
@@ -43,9 +43,9 @@ class Pedido extends BaseEntity
      **/
     private $pedidoBebidas;
     
-    public function __construct(Collection $pedidoPratos, Collection $pedidoBebida)
+    public function __construct(Collection $pedidoProdutos, Collection $pedidoBebida)
     {
-        $this->pedidoPratos = new ArrayCollection();
+        $this->pedidoProdutos = new ArrayCollection();
         $this->pedidoBebidas = new ArrayCollection();
     }
 
@@ -59,9 +59,9 @@ class Pedido extends BaseEntity
         return $this->cancelado;
     }
 
-    public function getPedidoPratos()
+    public function getPedidoProdutos()
     {
-        return $this->pedidoPratos;
+        return $this->pedidoProdutos;
     }
 
     public function getPedidoBebidas()
@@ -81,9 +81,9 @@ class Pedido extends BaseEntity
         return $this;
     }
 
-    public function setPedidoPratos(Collection $pedidoPratos)
+    public function setPedidoProdutos(Collection $pedidoProdutos)
     {
-        $this->pedidoPratos = $pedidoPratos;
+        $this->pedidoProdutos = $pedidoProdutos;
         return $this;
     }
 

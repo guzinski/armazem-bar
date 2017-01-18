@@ -7,17 +7,20 @@
                 <i class="fa fa-home"></i> <span>Home</span>
             </a>
         </li>
-        {% if is_granted('ROLE_USUARIO') %}
-        <li class="{% if 'usuario' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('usuario_index') }}"><i class="fa fa-users"></i> <span>Usuarios</span></a></li>
+        {% if is_granted('ROLE_COZINHA') %}
+        <li class="{% if 'cozinha' in app.request.get('_route')  %} active{% endif %}"><a href="#"><i class="fa fa-cutlery"></i> <span>Cozinha</span></a></li>
         {% endif  %}
-        {% if is_granted('ROLE_PRATO') %}
-        <li class="{% if 'prato' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('prato_index') }}"><i class="fa fa-cutlery"></i> <span>Pratos</span></a></li>
+        {% if is_granted('ROLE_PRODUTO') %}
+        <li class="{% if 'produto' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('produto_index') }}"><i class="fa fa-cubes"></i> <span>Produtos</span></a></li>
         {% endif  %}
         {% if is_granted('ROLE_BEBIDA') %}
         <li class="{% if 'bebida' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('bebida_index') }}"><i class="fa fa-glass"></i> <span>Bebidas</span></a></li>
         {% endif  %}
         {% if is_granted('ROLE_COMPRA') %}
         <li class="{% if 'compra' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('compra_index') }}"><i class="fa fa-sign-in"></i> <span>Compra de bebidas</span></a></li>
+        {% endif  %}
+        {% if is_granted('ROLE_USUARIO') %}
+        <li class="{% if 'usuario' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('usuario_index') }}"><i class="fa fa-users"></i> <span>Usuarios</span></a></li>
         {% endif  %}
     </ul>
 

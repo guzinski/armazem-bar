@@ -108,7 +108,7 @@ class BebidaController extends Controller
             $em = $this->getDoctrine()->getManager();
             $bebida = $em->find(Bebida::class, $id);
             if (is_null($bebida)) {
-                $response['error'] = "Erro ao excluir, prato não encontrado!";
+                $response['error'] = "Erro ao excluir, bebida não encontrado!";
             } else {
                 if ($bebida->getPedidoBebidas()->count()>0){
                     $response['error'] = "Não é possível excluir a bebida, existem Pedidos vinculados!";

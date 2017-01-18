@@ -5,17 +5,17 @@ namespace ArmazemBarBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of PedidoPrato
- * @ORM\Table(name="pedido_prato")
+ * Description of PedidoProduto
+ * @ORM\Table(name="pedido_produto")
  * @ORM\Entity
  * @author Luciano
  */
-class PedidoPrato extends BaseEntity
+class PedidoProduto extends BaseEntity
 {
     /**
      * @var Pedido
      *
-     * @ORM\ManyToOne(targetEntity="Pedido", inversedBy="pedidoPratos")
+     * @ORM\ManyToOne(targetEntity="Pedido", inversedBy="pedidoProdutos")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="pedido", referencedColumnName="id")
      * })
@@ -24,14 +24,14 @@ class PedidoPrato extends BaseEntity
     
     
     /**
-     * @var Prato
+     * @var Produto
      *
-     * @ORM\ManyToOne(targetEntity="Prato", inversedBy="pedidoPratos")
+     * @ORM\ManyToOne(targetEntity="Produto", inversedBy="pedidoProdutos")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="prato", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="produto", referencedColumnName="id")
      * })
      */
-    private $prato;
+    private $produto;
 
     
     /**
@@ -55,9 +55,9 @@ class PedidoPrato extends BaseEntity
         return $this->pedido;
     }
 
-    public function getPrato()
+    public function getProduto()
     {
-        return $this->prato;
+        return $this->produto;
     }
 
     public function getQuantidade()
@@ -71,9 +71,9 @@ class PedidoPrato extends BaseEntity
         return $this;
     }
 
-    public function setPrato(Prato $prato)
+    public function setProduto(Produto $produto)
     {
-        $this->prato = $prato;
+        $this->produto = $produto;
         return $this;
     }
 
@@ -86,7 +86,7 @@ class PedidoPrato extends BaseEntity
 
     public function getLabel()
     {
-        return  $this->getPrato() . " - Quantidade:" . $this->quantidade. " - Observações:".$this->observacoes;
+        return  $this->getProduto() . " - Quantidade:" . $this->quantidade. " - Observações:".$this->observacoes;
     }
 
     

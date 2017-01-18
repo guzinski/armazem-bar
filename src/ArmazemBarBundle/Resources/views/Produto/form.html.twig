@@ -1,6 +1,6 @@
 {% extends "ArmazemBarBundle::layout.html.twig" %}
 {% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
-{% block title %}Do Armazêm Bar | Pratos{% endblock %}
+{% block title %}Do Armazêm Bar | Produtos{% endblock %}
 {% block head %}
     <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
@@ -37,15 +37,15 @@
 <div class="pageheader">
     <div class="media">
         <div class="pageicon pull-left">
-            <i class="fa fa-cutlery"></i>
+            <i class="fa fa-cubes"></i>
         </div>
         <div class="media-body">
             <ul class="breadcrumb">
                 <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
-                <li><a href="{{ path('prato_index') }}">Pratos</a></li>
-                <li>{{ prato.getid>0 ? "Editar" : "Cadastrar" }} Prato</li>
+                <li><a href="{{ path('produto_index') }}">Produtos</a></li>
+                <li>{{ produto.getid>0 ? "Editar" : "Cadastrar" }} Produto</li>
             </ul>
-            <h4>{{ prato.getid>0 ? "Editar" : "Cadastrar" }} Prato</h4>
+            <h4>{{ produto.getid>0 ? "Editar" : "Cadastrar" }} Produto</h4>
         </div>
     </div><!-- media -->
 </div><!-- pageheader -->
