@@ -41,3 +41,5 @@ security:
         - { path: ^/produto,        roles: ROLE_PRODUTO }
         - { path: ^/bebida,         roles: ROLE_BEBIDA }
         - { path: ^/compra,         roles: ROLE_COMPRA }
+        - { path: ^/pedido/cozinha, roles: ROLE_COZINHA }
+        - { path: ^/pedido,         roles: ROLE_PEDIDO }

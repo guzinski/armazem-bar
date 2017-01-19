@@ -26,7 +26,7 @@ class PedidoProduto extends BaseEntity
     /**
      * @var Produto
      *
-     * @ORM\ManyToOne(targetEntity="Produto", inversedBy="pedidoProdutos")
+     * @ORM\ManyToOne(targetEntity="Produto", inversedBy="pedidoProdutos", fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="produto", referencedColumnName="id")
      * })
@@ -45,16 +45,23 @@ class PedidoProduto extends BaseEntity
     /**
      * @var string
      *
-     * @ORM\Column(type="text", nullable=false)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $observacoes;
 
-    
+    /**
+     * 
+     * @return Pedido
+     */
     public function getPedido()
     {
         return $this->pedido;
     }
 
+    /**
+     * 
+     * @return Produto
+     */
     public function getProduto()
     {
         return $this->produto;
@@ -83,7 +90,18 @@ class PedidoProduto extends BaseEntity
         return $this;
     }
 
+    public function getObservacoes()
+    {
+        return (string) $this->observacoes;
+    }
 
+    public function setObservacoes($observacoes)
+    {
+        $this->observacoes = $observacoes;
+        return $this;
+    }
+
+    
     public function getLabel()
     {
         return  $this->getProduto() . " - Quantidade:" . $this->quantidade. " - Observações:".$this->observacoes;

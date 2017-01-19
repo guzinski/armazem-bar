@@ -8,7 +8,7 @@
             </a>
         </li>
         {% if is_granted('ROLE_COZINHA') %}
-        <li class="{% if 'cozinha' in app.request.get('_route')  %} active{% endif %}"><a href="#"><i class="fa fa-cutlery"></i> <span>Cozinha</span></a></li>
+        <li class="{% if 'cozinha' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('pedido_cozinha') }}"><i class="fa fa-cutlery"></i> <span>Cozinha</span></a></li>
         {% endif  %}
         {% if is_granted('ROLE_PRODUTO') %}
         <li class="{% if 'produto' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('produto_index') }}"><i class="fa fa-cubes"></i> <span>Produtos</span></a></li>
@@ -18,6 +18,9 @@
         {% endif  %}
         {% if is_granted('ROLE_COMPRA') %}
         <li class="{% if 'compra' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('compra_index') }}"><i class="fa fa-sign-in"></i> <span>Compra de bebidas</span></a></li>
+        {% endif  %}
+        {% if is_granted('ROLE_PEDIDO') %}
+        <li class="{% if 'compra' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('pedido_index') }}"><i class="fa fa-list"></i> <span>Histórico de pedidos</span></a></li>
         {% endif  %}
         {% if is_granted('ROLE_USUARIO') %}
         <li class="{% if 'usuario' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('usuario_index') }}"><i class="fa fa-users"></i> <span>Usuarios</span></a></li>

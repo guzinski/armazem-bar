@@ -33,13 +33,13 @@ class Pedido extends BaseEntity
     
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="PedidoProduto", mappedBy="pedido")
+     * @ORM\OneToMany(targetEntity="PedidoProduto", cascade={"all"},  mappedBy="pedido", fetch="EAGER")
      **/
     private $pedidoProdutos;
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="PedidoBebida", mappedBy="pedido")
+     * @ORM\OneToMany(targetEntity="PedidoBebida", cascade={"all"},  mappedBy="pedido", fetch="EAGER")
      **/
     private $pedidoBebidas;
     

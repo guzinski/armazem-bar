@@ -23,9 +23,9 @@ class PedidoBebida extends BaseEntity
     
     
     /**
-     * @var Produto
+     * @var Bebida
      *
-     * @ORM\ManyToOne(targetEntity="Bebida", inversedBy="pedidoBebidas")
+     * @ORM\ManyToOne(targetEntity="Bebida", inversedBy="pedidoBebidas", fetch="EAGER")
      * @ORM\JoinColumn(name="produto", referencedColumnName="id", nullable=false)
      */
     private $bebida;
@@ -37,12 +37,19 @@ class PedidoBebida extends BaseEntity
      */
     private $quantidade = 0;
 
-    
+    /**
+     * 
+     * @return Pedido
+     */
     public function getPedido()
     {
         return $this->pedido;
     }
 
+    /**
+     * 
+     * @return Bebida
+     */
     public function getBebida()
     {
         return $this->bebida;
@@ -59,7 +66,7 @@ class PedidoBebida extends BaseEntity
         return $this;
     }
 
-    public function setBebida(Produto $bebida)
+    public function setBebida(Bebida $bebida)
     {
         $this->bebida = $bebida;
         return $this;

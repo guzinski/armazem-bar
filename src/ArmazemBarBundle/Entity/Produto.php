@@ -44,14 +44,14 @@ class Produto extends BaseEntity
      * @ORM\OneToMany(targetEntity="PedidoProduto", mappedBy="produto")
      **/
     private $pedidoProdutos;
-    
-    public function __construct()
+      
+    public function __construct($descricao = "", $ativo = TRUE)
     {
         parent::__construct();
+        $this->descricao = $descricao;
+        $this->ativo = $ativo;
         $this->pedidoProdutos = new ArrayCollection();
     }
-
-    
 
     public function getDescricao()
     {

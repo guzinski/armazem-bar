@@ -38,8 +38,9 @@ class PedidoProdutoType extends AbstractType
         $builder->add('quantidade', NumberType::class, [
             'attr' => ['placeholder' => "Quantidade"],
         ]);
-        $builder->add('descricao', TextareaType::class, [
+        $builder->add('observacoes', TextareaType::class, [
             'attr' => ['placeholder' => "Descrição"],
+            'required' => false,
         ]);
     }
     
