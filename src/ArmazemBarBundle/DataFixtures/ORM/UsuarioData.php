@@ -20,24 +20,35 @@ class UsuarioData implements FixtureInterface
     public function load(ObjectManager $manager)
     {
         
-        $nivel = new Nivel("Administrador");
+        $adm = new Nivel("Administrador");
+        $cozinha = new Nivel("Cozinha");
+        $cozinhap = new Permissao("Cozinha", "COZINHA");
                 
-        $nivel->getPermissoes()->add(new Permissao("Usuários", "USUARIO"));
-        $nivel->getPermissoes()->add(new Permissao("Produtos", "PRODUTO"));
-        $nivel->getPermissoes()->add(new Permissao("Bebidas", "BEBIDA"));
-        $nivel->getPermissoes()->add(new Permissao("Cozinha", "COZINHA"));
-        $nivel->getPermissoes()->add(new Permissao("Compras", "COMPRA"));
-        $nivel->getPermissoes()->add(new Permissao("Pedidos", "PEDIDO"));
+        $adm->getPermissoes()->add(new Permissao("Usuários", "USUARIO"));
+        $adm->getPermissoes()->add(new Permissao("Produtos", "PRODUTO"));
+        $adm->getPermissoes()->add(new Permissao("Bebidas", "BEBIDA"));
+        $adm->getPermissoes()->add($cozinhap);
+        $adm->getPermissoes()->add(new Permissao("Compras", "COMPRA"));
+        $adm->getPermissoes()->add(new Permissao("Pedidos", "PEDIDO"));
+        $cozinha->getPermissoes()->add($cozinhap);
 
-        $manager->persist($nivel);
+        $manager->persist($cozinha);
+        $manager->persist($adm);
         
         $usuario = new Usuario();
         $usuario->setEmail("lucianoguzinski@gmail.com")
                 ->setNome("Luciano Guzinski")
                 ->setSenha("123456")
-                ->setNivel($nivel);
+                ->setNivel($adm);
+        
+        $cozinhau = new Usuario();
+        $usuario->setEmail("cozinha@teste.com")
+                ->setNome("Perfil de Cozinha")
+                ->setSenha("123456")
+                ->setNivel($cozinha);
         
         $manager->persist($usuario);
+        $manager->persist($cozinhau);
         $manager->flush();
     }
 

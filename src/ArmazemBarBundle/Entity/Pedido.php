@@ -121,4 +121,23 @@ class Pedido extends BaseEntity
         
     }
     
+    
+    public function getStringSituacao()
+    {
+        if ($this->cancelado) {
+            return "Cancelado";
+        }
+        if ($this->situacao == self::CONCLUIDO) {
+            return "Concluído";
+        }
+        if ($this->situacao == self::FILA) {
+            return "Na Fila";
+        }
+        if ($this->situacao == self::PRODUCAO) {
+            return "Em Produção";
+        }
+        
+    }
+
+    
 }

@@ -1,0 +1,137 @@
+{% extends "ArmazemBarBundle::layout.html.twig" %}
+{% block title %}Do Armazêm Bar | Cozinha{% endblock %}
+{% block head %}
+    <link href="{{ asset('bundles/armazembar/css/style.datatables.css') }}" rel="stylesheet">
+    <script src="{{ asset('bundles/armazembar/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery-datatables.responsive.js') }}"></script>
+    <script src="//cdn.datatables.net/plug-ins/725b2a2115b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="{{ asset('bundles/armazembar/js/select2.min.js') }}"></script>
+
+    <script>
+        var table;
+
+        function format(d) {
+            var html = '<table class="table table-bordered">'+
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Bebida</th>' +
+                    '<th>Quantidade</th>' +
+                    '</tr>'+
+                    '</thead>';
+                    '<tbody>';
+            jQuery.each(d.pedido_bebidas, function(index, value) {
+                html += '<tr>' +
+                        '<td>' + value.descricao + '</td>' +
+                        '<td>' + value.quantidade + '</td>' +
+                        '</tr>';
+            }); 
+            html += '</tbody></table>';
+            
+            html += '<table class="table table-bordered">'+
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Bebida</th>' +
+                    '<th>Quantidade</th>' +
+                    '<th>Observações</th>' +
+                    '</tr>'+
+                    '</thead>';
+                    '<tbody>';
+            jQuery.each(d.pedido_produtos, function(index, value) {
+                html += '<tr>' +
+                        '<td>' + value.descricao + '</td>' +
+                        '<td>' + value.quantidade + '</td>' +
+                        '<td>' + value.observacoes + '</td>' +
+                        '</tr>';
+            }); 
+            
+            html += '</tbody></table><a class="btn btn-danger" href="#">Cancelar</a>';
+            return html;
+        }
+
+
+        jQuery(document).ready(function () {
+            jQuery("#msgs").hide();
+            table = jQuery('#pedidos').DataTable({
+                    responsive: true,
+                    "ajax": "{{ path('pedido_pagination') }}",
+                    "columns": [
+                        {
+                            "className":      'details-control',
+                            "orderable":      false,
+                            "data":           null,
+                            "defaultContent": ''
+                        },
+                        {"data": "numero"},
+                        {"data": "situacao"},
+                    ],
+                });
+
+                // DataTables Length to Select2
+                jQuery('div.dataTables_length select').removeClass('form-control input-sm');
+                jQuery('div.dataTables_length select').css({width: '60px'});
+                jQuery('div.dataTables_length select').select2({
+                    minimumResultsForSearch: -1
+                });
+
+                jQuery('#pedidos tbody').on('click', 'td.details-control', function () {
+                    var tr = jQuery(this).closest('tr');
+                    var row = table.row( tr );
+
+                    if ( row.child.isShown() ) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                        tr.removeClass('active');
+                    }
+                    else {
+                        // Open this row
+                        row.child( format(row.data()) ).show();
+                        tr.addClass('shown');
+                        tr.addClass('active');
+                    }
+                } );
+
+            });
+
+
+    </script>
+{% endblock %}
+{% block mainpanel %}
+    <div class="pageheader">
+        <div class="media">
+            <div class="pageicon pull-left">
+                <i class="fa fa-cutlery"></i>
+            </div>
+            <div class="media-body">
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
+                    <li>Cozinha</li>
+                </ul>
+                <h4>Cozinha</h4>
+            </div>
+        </div><!-- media -->
+    </div><!-- pageheader -->
+    <div class="contentpanel">
+        <div class="row">
+            <div class="col-lg-12">
+                {% for msg in success %}
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {{ msg|raw }}
+                    </div>
+                {% endfor %}
+
+                <div id="msgs"></div>
+
+                <table id="pedidos" class="table table-hover ">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-1">Detalhes</th>
+                            <th>Número</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div><!-- panel -->
+    </div><!-- contentpanel -->
+{% endblock %}

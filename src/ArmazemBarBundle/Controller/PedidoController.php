@@ -75,6 +75,7 @@ class PedidoController extends Controller
                 'data_pedido'       => $pedido->getDataCadastro()->format("d/m/Y"),
                 'pedido_bebidas'    => $pedidoBebidas,
                 'pedido_produtos'   => $pedidoProdutos,
+                'situacao'            => $pedido->getStringSituacao(),
             ];            
         }
         $return['recordsTotal'] = count($pedidos);
@@ -90,7 +91,13 @@ class PedidoController extends Controller
      */
     public function cozinhaAction(Request $request)
     {
-        return [];
+        $success = "";
+        if ($request->getSession()->getFlashBag()->has("success")) {
+            $success = $request->getSession()->getFlashBag()->get("success");
+            $request->getSession()->getFlashBag()->clear();
+        }
+        
+        return array('success' => $success);
     }
 
     
