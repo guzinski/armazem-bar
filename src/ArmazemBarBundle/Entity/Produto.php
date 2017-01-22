@@ -32,6 +32,22 @@ class Produto extends BaseEntity
     private $descricao;
     
     
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", scale=2, precision=7, nullable=false)
+     */
+    private $precoCusto;
+
+    
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", scale=2, precision=7,  nullable=false)
+     */
+    private $precoVenda;
+    
     /**
      * @var string
      *
@@ -85,6 +101,28 @@ class Produto extends BaseEntity
         $this->ativo = $ativo;
         return $this;
     }    
+    
+    public function getPrecoCusto()
+    {
+        return $this->precoCusto;
+    }
+
+    public function getPrecoVenda()
+    {
+        return $this->precoVenda;
+    }
+
+    public function setPrecoCusto($precoCusto)
+    {
+        $this->precoCusto = $precoCusto;
+        return $this;
+    }
+
+    public function setPrecoVenda($precoVenda)
+    {
+        $this->precoVenda = $precoVenda;
+        return $this;
+    }
 
     public function getLabel()
     {

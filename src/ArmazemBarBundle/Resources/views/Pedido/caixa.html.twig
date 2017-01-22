@@ -1,5 +1,5 @@
 {% extends "ArmazemBarBundle::layout.html.twig" %}
-{% block title %}Do Armazêm Bar | Cozinha{% endblock %}
+{% block title %}Do Armazêm Bar | Frente de Caixa{% endblock %}
 {% block head %}
     <link href="{{ asset('bundles/armazembar/css/style.datatables.css') }}" rel="stylesheet">
     <script src="{{ asset('bundles/armazembar/js/jquery.dataTables.min.js') }}"></script>
@@ -116,7 +116,7 @@
                         "url": "{{ path('pedido_cozinha_pagination') }}",
                         "data": function ( d ) {
                             d.concluídos = concluidos;
-                            d.cancelados = 0;
+                            d.cancelados = 1;
                         }
                     },
                     "columns": [
@@ -183,20 +183,21 @@
     <div class="pageheader">
         <div class="media">
             <div class="pageicon pull-left">
-                <i class="fa fa-cutlery"></i>
+                <i class="fa fa-money"></i>
             </div>
             <div class="media-body">
                 <ul class="breadcrumb">
                     <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
-                    <li>Cozinha</li>
+                    <li>Frente de Caixa</li>
                 </ul>
-                <h4>Cozinha</h4>
+                <h4>Frente de Caixa</h4>
             </div>
         </div><!-- media -->
     </div><!-- pageheader -->
     <div class="contentpanel">
         <div class="row">
             <div class="col-lg-12">
+                <a title="Novo Pedido" class="btn btn-default" href="{{ path('pedido_novo') }}"><em class="fa fa-plus"></em></a>
                 <button onclick="recarregarPedidos()" title="Recarregar pedidos" class="btn btn-default"><em class="fa fa-refresh"></em></button>
             </div>
         </div>

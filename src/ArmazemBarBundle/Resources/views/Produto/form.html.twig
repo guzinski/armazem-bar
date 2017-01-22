@@ -2,6 +2,8 @@
 {% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
 {% block title %}Do Armazêm Bar | Produtos{% endblock %}
 {% block head %}
+    <script src="{{ asset('bundles/armazembar/js/jquery.maskedinput.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery.maskMoney.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/validate/additional-methods.js') }}"></script>
@@ -9,7 +11,7 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery('#loading').hide();
-
+            jQuery("#produto_precoCusto, #produto_precoVenda").maskMoney({thousands:'', decimal:'.'});
             jQuery("form").validate({
                 highlight: function(element) {
                     jQuery(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -59,6 +61,8 @@
                 <div class="panel-body">
                     <div class="row">
                         {{ form_row(form.descricao) }}
+                        {{ form_row(form.precoCusto) }}
+                        {{ form_row(form.precoVenda) }}
                         {{ form_row(form.ativo) }}
                     </div><!-- row -->
                 </div><!-- panel-body -->

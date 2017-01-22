@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="usuario")
  * @ORM\Entity
  * @UniqueEntity(fields="email", message="Já existe um Usuário com esse e-mail cadastrado.")
+ * @UniqueEntity(fields="nome", message="Já existe um Usuário com esse nome cadastrado.")
  */
 class Usuario extends BaseEntity implements UserInterface
 {

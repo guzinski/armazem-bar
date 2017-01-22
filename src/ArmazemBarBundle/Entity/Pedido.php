@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description of Pedido
  * @ORM\Table(name="pedido")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ArmazemBarBundle\Repository\PedidoRepository")
  * @author Luciano
  */
 class Pedido extends BaseEntity
@@ -135,6 +135,23 @@ class Pedido extends BaseEntity
         }
         if ($this->situacao == self::PRODUCAO) {
             return "Em Produção";
+        }
+        
+    }
+    
+    public function getHtmlSituacao()
+    {
+        if ($this->cancelado) {
+            return "<button class=\"btn btn-danger\">Cancelado</button>";
+        }
+        if ($this->situacao == self::CONCLUIDO) {
+            return "<button class=\"btn btn-success\">Concluído</button>";
+        }
+        if ($this->situacao == self::FILA) {
+            return "<button class=\"btn btn-warning\">Na Fila</button>";
+        }
+        if ($this->situacao == self::PRODUCAO) {
+            return "<button class=\"btn btn-primary\">Em Produção</button>";
         }
         
     }

@@ -2,6 +2,7 @@
 {% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
 {% block title %}Do Armazêm Bar | Bebidas{% endblock %}
 {% block head %}
+    <script src="{{ asset('bundles/armazembar/js/jquery.maskMoney.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/validate/additional-methods.js') }}"></script>
@@ -9,6 +10,7 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery('#loading').hide();
+            jQuery("#bebida_precoCusto, #bebida_precoVenda").maskMoney({thousands:'', decimal:'.'});
             jQuery("#bebida_quantidadeInicial").keyup(function () {
                 var valor = jQuery(this).val();
                 jQuery(this).val(valor.replace(/[^\d]/gi, ""));
@@ -63,6 +65,8 @@
                 <div class="panel-body">
                     <div class="row">
                         {{ form_row(form.descricao) }}
+                        {{ form_row(form.precoCusto) }}
+                        {{ form_row(form.precoVenda) }}
                         {{ form_row(form.quantidadeInicial) }}
                         {{ form_row(form.ativo) }}
                     </div><!-- row -->

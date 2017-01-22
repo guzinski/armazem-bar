@@ -33,7 +33,6 @@ class Bebida extends BaseEntity
      * @ORM\Column(type="boolean", nullable=false)
      */
     private $ativo = TRUE;
-
     
     /**
      * @var int
@@ -41,6 +40,20 @@ class Bebida extends BaseEntity
      * @ORM\Column(type="integer", nullable=false)
      */
     private $quantidadeInicial;
+    
+        /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", scale=2, precision=7, nullable=false)
+     */
+    private $precoCusto;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", scale=2, precision=7,  nullable=false)
+     */
+    private $precoVenda;
     
     /**
      * @var Collection
@@ -55,7 +68,7 @@ class Bebida extends BaseEntity
     private $compraBebidas;
 
     
-    public function __construct($descricao, $ativo = TRUE, $quantidadeInicial = 0)
+    public function __construct($descricao = "", $ativo = TRUE, $quantidadeInicial = 0)
     {
         $this->descricao = $descricao;
         $this->ativo = $ativo;
@@ -108,12 +121,34 @@ class Bebida extends BaseEntity
         $this->ativo = $ativo;
         return $this;
     }
-        
+
+    
+    public function getPrecoCusto()
+    {
+        return $this->precoCusto;
+    }
+
+    public function getPrecoVenda()
+    {
+        return $this->precoVenda;
+    }
+
+    public function setPrecoCusto($precoCusto)
+    {
+        $this->precoCusto = $precoCusto;
+        return $this;
+    }
+
+    public function setPrecoVenda($precoVenda)
+    {
+        $this->precoVenda = $precoVenda;
+        return $this;
+    }
+
     public function getLabel()
     {
         return $this->descricao;
     }
-
 
     public function getCompraBebidas()
     {

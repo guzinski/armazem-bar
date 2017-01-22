@@ -42,7 +42,7 @@ class UsuarioData implements FixtureInterface
                 ->setNivel($adm);
         
         $cozinhau = new Usuario();
-        $usuario->setEmail("cozinha@teste.com")
+        $cozinhau->setEmail("cozinha@teste.com")
                 ->setNome("Perfil de Cozinha")
                 ->setSenha("123456")
                 ->setNivel($cozinha);

@@ -11,6 +11,7 @@ namespace ArmazemBarBundle\Form;
 use ArmazemBarBundle\Entity\Bebida;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,6 +29,8 @@ class BebidaType extends AbstractType
         $builder->add('descricao', TextType::class, [
             'attr' => ['placeholder' => "Ex. Coca-Cola 600ml"]
         ]);
+        $builder->add('precoCusto', MoneyType::class, array('currency' => 'BRL', 'grouping' => true));
+        $builder->add('precoVenda', MoneyType::class, array('currency' => 'BRL', 'grouping' => true));
         $builder->add('quantidadeInicial', NumberType::class);
         $builder->add('ativo', CheckboxType::class, array(
             'required' => false,

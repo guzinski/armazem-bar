@@ -7,6 +7,9 @@
                 <i class="fa fa-home"></i> <span>Home</span>
             </a>
         </li>
+        {% if is_granted('ROLE_PEDIDO') %}
+        <li class="{% if 'pedido_caixa' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('pedido_caixa') }}"><i class="fa fa-money"></i> <span>Frente de Caixa</span></a></li>
+        {% endif  %}
         {% if is_granted('ROLE_COZINHA') %}
         <li class="{% if 'pedido_cozinha' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('pedido_cozinha') }}"><i class="fa fa-cutlery"></i> <span>Cozinha</span></a></li>
         {% endif  %}
