@@ -207,10 +207,5 @@ class PedidoController extends Controller
         }
         $response['message'] = $this->renderView("ArmazemBarBundle::Messages/message.html.twig", $response);
         return new Response(json_encode($response));
-
     }
-
-    
-    
-    
 }

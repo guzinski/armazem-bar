@@ -10,11 +10,14 @@ namespace ArmazemBarBundle\Controller;
 
 use ArmazemBarBundle\Entity\Bebida;
 use ArmazemBarBundle\Form\BebidaType;
+use Exception;
+use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Description of BebidaController
@@ -171,5 +174,51 @@ class BebidaController extends Controller
         return new Response(json_encode($response));
 
     }
+    
+    
+    /**
+     * @Route("/preco/venda", name="bebida_preco_venda")
+     * @param Request $request
+     * @return Response
+     */
+    public function precoVendaAction(Request $request)
+    {
+        $bebida = $request->get("bebida");
+        if (empty($bebida)) {
+            throw new InvalidArgumentException;
+        }
+        
+        $bebida = $this->getDoctrine()->getRepository(Bebida::class)->find($bebida);
+        
+        if (empty($bebida)) {
+            throw new NotFoundHttpException;
+        }
+        
+        
+        return new Response($bebida->getPrecoVenda());
+    }
+    
+    /**
+     * @Route("/estoque", name="bebida_estoque")
+     * @param Request $request
+     * @return Response
+     */
+    public function estoqueAction(Request $request)
+    {
+        $bebida = $request->get("bebida");
+        if (empty($bebida)) {
+            throw new InvalidArgumentException;
+        }
+        
+        $bebida = $this->getDoctrine()->getRepository(Bebida::class)->find($bebida);
+        
+        if (empty($bebida)) {
+            throw new NotFoundHttpException;
+        }
+        
+        return new Response($bebida->getQuantidadeEstqoue());
+    }
+
+    
     
 }

@@ -34,7 +34,11 @@
             
             $newForm.find('select').select2();
 
+            if ($collectionHolder.attr("id") == "bebidas") {
+                addQuantidadeEstoque($newForm);
+            }
             addTagFormDeleteLink($newForm);
+            
             $collectionHolder.append($newForm);
             jQuery('.select2-container').css("width", "100%");
 
@@ -42,14 +46,20 @@
         
         function addTagFormDeleteLink($newForm) {
             var $removeForm = jQuery('<a class="btn btn-default pull-right" href="#"><em class="fa fa-remove" ></em></a>');
-            var $div = jQuery("<div class='col-sm-2'></div>");
+            var $div = jQuery("<div class='col-sm-1'></div>");
             $div.append($removeForm);
-            $newForm.append($removeForm);
+            $newForm.children().append($div);
 
             $removeForm.on('click', function(e) {
                 e.preventDefault();
                 jQuery(this).parent().remove();
             });
+        }
+        function addQuantidadeEstoque($newForm) {
+            var $estoqueForm = jQuery('<span class="estoque">Estoque</span>');
+            var $div = jQuery("<div class='col-sm-1'></div>");
+            $div.append($estoqueForm);
+            $newForm.children().append($div);
         }
 
         jQuery(document).ready(function () {
@@ -69,6 +79,15 @@
                 e.preventDefault();
                 addTagForm($pedidoProdutos);
             });
+            
+            $("#bebidas").on("change", "select",function(){
+                if (this.value =! "") {
+                    jQuery.get("{{ path('bebida_estoque') }}", {bebida: this.value}, function (retorno){
+                        alert(retorno);
+                    });
+                }
+            });
+
             
             jQuery('#loading').hide();
 

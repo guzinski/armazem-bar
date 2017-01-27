@@ -4,11 +4,14 @@ namespace ArmazemBarBundle\Controller;
 
 use ArmazemBarBundle\Entity\Produto;
 use ArmazemBarBundle\Form\ProdutoType;
+use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Description of ProdutoController
@@ -157,6 +160,29 @@ class ProdutoController extends Controller
         $response['message'] = $this->renderView("ArmazemBarBundle::Messages/message.html.twig", $response);
         return new Response(json_encode($response));
 
+    }
+
+    
+    /**
+     * @Route("/preco/venda", name="produto_preco_venda")
+     * @param Request $request
+     * @return Response
+     */
+    public function precoVendaAction(Request $request)
+    {
+        $produto = $request->get("produto");
+        if (empty($produto)) {
+            throw new InvalidArgumentException;
+        }
+        
+        $produto = $this->getDoctrine()->getRepository(Produto::class)->find($produto);
+        
+        if (empty($produto)) {
+            throw new NotFoundHttpException;
+        }
+        
+        
+        return new Response($produto->getPrecoVenda());
     }
 
     
