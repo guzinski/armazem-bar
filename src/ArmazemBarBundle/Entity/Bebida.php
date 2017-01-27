@@ -68,12 +68,14 @@ class Bebida extends BaseEntity
     private $compraBebidas;
 
     
-    public function __construct($descricao = "", $ativo = TRUE, $quantidadeInicial = 0)
+    public function __construct($descricao = "", $ativo = TRUE, $quantidadeInicial = 0, $precoCusto = NULL, $precoVenda = NULL)
     {
+        parent::__construct();
         $this->descricao = $descricao;
         $this->ativo = $ativo;
         $this->quantidadeInicial = $quantidadeInicial;
-        parent::__construct();
+        $this->precoCusto = $precoCusto;
+        $this->precoVenda = $precoVenda;
         $this->pedidoBebidas = new ArrayCollection();
         $this->compraBebidas = new ArrayCollection();
     }

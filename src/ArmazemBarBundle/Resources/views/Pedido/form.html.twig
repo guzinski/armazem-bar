@@ -26,7 +26,7 @@
 
             var $newForm = jQuery(prototype.replace(/__name__/g, index));
 
-            $collectionHolder.data('index', index + 1);
+            $collectionHolder.data('index', ++index);
             $newForm.find('input').keyup(function () {
                 var valor = jQuery(this).val();
                 jQuery(this).val(valor.replace(/[^\d]/gi, ""));
@@ -61,6 +61,12 @@
             $div.append($estoqueForm);
             $newForm.children().append($div);
         }
+        function addPrecoVenda($newForm) {
+            var $estoqueForm = jQuery('<span class="precoVenda">Estoque</span>');
+            var $div = jQuery("<div class='col-sm-1'></div>");
+            $div.append($estoqueForm);
+            $newForm.children().append($div);
+        }
 
         jQuery(document).ready(function () {
             $pedidoBebidas = jQuery('#bebidas');
@@ -81,9 +87,14 @@
             });
             
             $("#bebidas").on("change", "select",function(){
-                if (this.value =! "") {
-                    jQuery.get("{{ path('bebida_estoque') }}", {bebida: this.value}, function (retorno){
-                        alert(retorno);
+                var $select = jQuery(this);
+                if (bebida =! "") {
+                    jQuery(".locked").fadeIn();
+                    jQuery.post("{{ path('bebida_estoque') }}", {bebida: parseInt(this.value)}, function (retorno){
+                        $select.parent().parent().find(".estoque").html(retorno);
+                        alert($select.parent().parent().attr("id"));
+                        jQuery(".locked").fadeOut();
+{#                        alert(retorno);#}
                     });
                 }
             });
@@ -118,7 +129,7 @@
     <div class="pageheader">
         <div class="media">
             <div class="pageicon pull-left">
-                <i class="fa fa-sign-in"></i>
+                <i class="fa fa-clipboard"></i>
             </div>
             <div class="media-body">
                 <ul class="breadcrumb">

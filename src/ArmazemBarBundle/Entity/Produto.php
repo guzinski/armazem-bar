@@ -61,11 +61,13 @@ class Produto extends BaseEntity
      **/
     private $pedidoProdutos;
       
-    public function __construct($descricao = "", $ativo = TRUE)
+    public function __construct($descricao = "", $ativo = TRUE, $precoCusto = NULL, $precoVenda = NULL)
     {
         parent::__construct();
         $this->descricao = $descricao;
         $this->ativo = $ativo;
+        $this->precoCusto = $precoCusto;
+        $this->precoVenda = $precoVenda;
         $this->pedidoProdutos = new ArrayCollection();
     }
 

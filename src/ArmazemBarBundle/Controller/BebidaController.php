@@ -216,7 +216,7 @@ class BebidaController extends Controller
             throw new NotFoundHttpException;
         }
         
-        return new Response($bebida->getQuantidadeEstqoue());
+        return new Response($bebida->getQuantidadeEstoque());
     }
 
     
