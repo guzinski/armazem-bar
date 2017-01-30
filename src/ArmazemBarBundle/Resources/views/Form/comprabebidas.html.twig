@@ -1,17 +1,18 @@
 {% block form_row %}
-    <div class="form-group">
+    <td>
         {{ form_widget(form) }}
         {{ form_errors(form) }}
-    </div>
+    </td>
 {% endblock form_row %}
 
-{% block number_row -%}
-    <div class="col-sm-4">
+{#{% block number_row -%}
+    <div class="col-sm-3">
         {{ form_widget(form, { 'attr': {'class': 'form-control'} }) }}
     </div>
 {%- endblock number_row %}
 {% block choice_row -%}
-    <div class="col-sm-6">
+    <div class="col-sm-4">
         {{ form_widget(form) }}
     </div>
 {%- endblock choice_row %}
+#}
