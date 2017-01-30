@@ -24,35 +24,35 @@
             // get the new index
             var index = $collectionHolder.data('index');
 
-            var $newForm = jQuery(prototype.replace(/__name__/g, index));
+            var $newForm = jQuery("<tr>"+ prototype.replace(/__name__/g, index) +"<td></td></tr>");
 
-            $collectionHolder.data('index', ++index);
-            $newForm.find('input').keyup(function () {
+            $collectionHolder.data('index', index + 1);
+            $newForm.find(".quantidade").addClass("form-control").keyup(function () {
                 var valor = jQuery(this).val();
                 jQuery(this).val(valor.replace(/[^\d]/gi, ""));
-            }).spinner({min: 1});
+            }).spinner({min: 1, change: quantidadeChange}).attr("min", "1");
             
-            $newForm.find('select').select2();
+            $newForm.find(".estoque").change(estoqueChange);
+            $newForm.find(".valor_unidade").change(valorUnidadeChange);
+            $newForm.find(".valor_total").change(valorTotalChange);
+            
+            $newForm.find('select').change(bebidaChange).select2();
 
-            if ($collectionHolder.attr("id") == "bebidas") {
-                addQuantidadeEstoque($newForm);
-            }
             addTagFormDeleteLink($newForm);
-            
-            $collectionHolder.append($newForm);
+            $collectionHolder.find('table').show();
+            $collectionHolder.find('table tbody').append($newForm);
             jQuery('.select2-container').css("width", "100%");
 
         }
         
         function addTagFormDeleteLink($newForm) {
             var $removeForm = jQuery('<a class="btn btn-default pull-right" href="#"><em class="fa fa-remove" ></em></a>');
-            var $div = jQuery("<div class='col-sm-1'></div>");
-            $div.append($removeForm);
-            $newForm.children().append($div);
-
+            $coluna = $newForm.find("td:last").append($removeForm);
             $removeForm.on('click', function(e) {
                 e.preventDefault();
-                jQuery(this).parent().remove();
+                $table = jQuery(this).closest("table");
+                jQuery(this).closest("tr").remove();
+                escondeTabela($table);
             });
         }
         function addQuantidadeEstoque($newForm) {
@@ -61,14 +61,61 @@
             $div.append($estoqueForm);
             $newForm.children().append($div);
         }
-        function addPrecoVenda($newForm) {
-            var $estoqueForm = jQuery('<span class="precoVenda">Estoque</span>');
-            var $div = jQuery("<div class='col-sm-1'></div>");
-            $div.append($estoqueForm);
-            $newForm.children().append($div);
+        
+        function  escondeTabela($table) {
+            if (!jQuery.trim($table.find("tbody").html())){
+                $table.hide();
+            }
+        }
+        
+        function bebidaChange() {
+            var $select = jQuery(this);
+            if (this.value != "") {
+                jQuery(".locked").fadeIn();
+                jQuery.get("{{ path('bebida_estoque') }}", { bebida: this.value }, function (retorno){
+                    $select.closest("tr").find(".estoque").val(retorno).trigger("change");
+                    $select.closest("tr").find(".quantidade").attr("max", retorno);
+                    jQuery.get("{{ path('bebida_preco_venda') }}", { bebida: $select.val() }, function (retorno){
+                        $select.closest("tr").find(".valor_unidade").val(retorno).trigger("change");
+                        jQuery(".locked").fadeOut();
+                    });
+                });
+            } else {
+                $select.closest("tr").find(".estoque").val(0).trigger("change");
+                $select.closest("tr").find(".quantidade").val(0).trigger("change").attr("max", "");
+                $select.closest("tr").find(".valor_unidade").val(0).trigger("change");
+            }
+        }
+        
+        function quantidadeChange() {
+            var valorUnidade = jQuery(this).closest("tr").find(".valor_unidade").val() ? parseFloat(jQuery(this).closest("tr").find(".valor_unidade").val()) : 0;
+            jQuery(this).closest("tr").find(".valor_total").val(valorUnidade*parseFloat(jQuery(this).val())).trigger("change");
+        }
+        
+        function  estoqueChange() {
+            if (jQuery(this).closest("td").children().length == 1) {
+                jQuery(this).closest("td").append(jQuery("<span class=\"h4\"></h4>"))
+            }
+            jQuery(this).closest("td").find(".h4").html(jQuery(this).val());
+        }
+        function  valorUnidadeChange() {
+            var quantidade = jQuery(this).closest("tr").find(".quantidade").val() ? parseFloat(jQuery(this).closest("tr").find(".quantidade").val()) : 0;
+            if (jQuery(this).closest("td").children().length == 1) {
+                jQuery(this).closest("td").append(jQuery("<span class=\"h4\"></h4>"))
+            }
+            console.log(quantidade);
+            console.log(parseFloat(jQuery(this).val()));
+            jQuery(this).closest("td").find(".h4").html(new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'BRL' }).format(jQuery(this).val()));
+            jQuery(this).closest("tr").find(".valor_total").val(quantidade*parseFloat(jQuery(this).val())).trigger("change");
+        }
+        function  valorTotalChange() {
+            if (jQuery(this).closest("td").children().length == 1) {
+                jQuery(this).closest("td").append(jQuery("<span class=\"h4\"></h4>"))
+            }
+            jQuery(this).closest("td").find(".h4").html(new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'BRL' }).format(jQuery(this).val()));
         }
 
-        jQuery(document).ready(function () {
+        jQuery(document).ready(function () {            
             $pedidoBebidas = jQuery('#bebidas');
             $pedidoProdutos = jQuery('#produtos');
             
@@ -86,21 +133,12 @@
                 addTagForm($pedidoProdutos);
             });
             
-            $("#bebidas").on("change", "select",function(){
-                var $select = jQuery(this);
-                if (bebida =! "") {
-                    jQuery(".locked").fadeIn();
-                    jQuery.post("{{ path('bebida_estoque') }}", {bebida: parseInt(this.value)}, function (retorno){
-                        $select.parent().parent().find(".estoque").html(retorno);
-                        alert($select.parent().parent().attr("id"));
-                        jQuery(".locked").fadeOut();
-{#                        alert(retorno);#}
-                    });
-                }
-            });
-
-            
             jQuery('#loading').hide();
+
+
+            jQuery.extend(jQuery.validator.messages, {
+                max: jQuery.validator.format("A quantidade em estoque estoque dessa bebida é de {0}."),
+            });
 
             jQuery("form").validate({
                 highlight: function (element) {
@@ -110,8 +148,9 @@
                     jQuery(element).closest('.form-group').removeClass('has-error');
                 },
                 errorPlacement: function (error, element) {
-                    jQuery(element).closest('.form-group').append(error);
+                    jQuery(element).closest("td").append(error);
                 },
+                ignore: [],
                 validClass: "",
                 submitHandler: function (form) {
                     jQuery("#salvar").hide();
@@ -119,6 +158,8 @@
                     form.submit();
                 }
             });
+            
+            
 
         });
 
@@ -160,10 +201,27 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div id="bebidas" data-prototype="{{ form_row(form.pedidoBebidas.vars.prototype)|e  }}" class="bebidas">
-                                {% for pedidoBebidas in form.pedidoBebidas %}
-                                    {{ form_row(pedidoBebidas) }}
-                                {% endfor %} 
+                            <div id="bebidas" data-index="{{ form.pedidoBebidas.count }}" data-prototype="{{ form_widget(form.pedidoBebidas.vars.prototype)|e  }}" class="bebidas">
+                                <table style="display: none" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Bebida</th>
+                                            <th>Quantidade</th>
+                                            <th>Estoque</th>
+                                            <th>Valor unid.:</th>
+                                            <th>Valor Total:</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for pedidoBebidas in form.pedidoBebidas %}
+                                        <tr>
+                                            {{ form_row(pedidoBebidas) }}
+                                        </tr>
+                                        {% endfor %} 
+                                        
+                                    </tbody>
+                                </table>
                              </div>
                         </div>
                     </div>
@@ -181,10 +239,26 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div id="produtos" data-prototype="{{ form_row(form.pedidoProdutos.vars.prototype)|e  }}" class="bebidas">
-                                {% for pedidoProduto in form.pedidoProdutos %}
-                                    {{ form_row(pedidoProduto) }}
-                                {% endfor %} 
+                            <div id="produtos" data-prototype="{{ form_widget(form.pedidoProdutos.vars.prototype)|e  }}" class="bebidas">
+                                <table style="display: none" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Bebida</th>
+                                            <th>Quantidade</th>
+                                            <th>Observações</th>
+                                            <th>Valor unid.:</th>
+                                            <th>Valor Total:</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for pedidoProduto in form.pedidoProdutos %}
+                                        <tr>
+                                            {{ form_row(pedidoProduto) }}
+                                        </tr>
+                                        {% endfor %} 
+                                    </tbody>
+                                </table>
                              </div>
                         </div>
                     </div>

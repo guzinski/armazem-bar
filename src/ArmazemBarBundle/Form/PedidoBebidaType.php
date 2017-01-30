@@ -13,7 +13,9 @@ use Doctrine\ORM\EntityRepository;
 use Proxies\__CG__\ArmazemBarBundle\Entity\Bebida;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,7 +29,7 @@ class PedidoBebidaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('bebida', EntityType::class, [
-            'placeholder'   => "Selecione a Bebida",
+            'placeholder'   => "Selecione",
             'class'         => Bebida::class,
             'query_builder' => function (EntityRepository $er) {
                 $query = $er->createQueryBuilder('B');
@@ -36,7 +38,22 @@ class PedidoBebidaType extends AbstractType
             },
         ]);
         $builder->add('quantidade', NumberType::class, [
-            'attr' => ['placeholder' => "Quantidade"],
+            'attr' => ['placeholder' => "Quantidade", 'class' => "quantidade form-control"],
+        ]);
+        $builder->add('estoque', TextType::class, [
+            'mapped' => false,
+            'attr' => ['class' => "estoque hidden"],
+            'required' => false,
+        ]);
+        $builder->add('valor_unidade', TextType::class, [
+            'mapped' => false,
+            'attr' => ['class' => "hidden valor_unidade"],
+            'required' => false,
+        ]);
+        $builder->add('valor_total', TextType::class, [
+            'mapped' => false,
+            'attr' => ['class' => "hidden valor_total"],
+            'required' => false,
         ]);
     }
    
