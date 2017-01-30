@@ -121,10 +121,9 @@
                     },
                     "columns": [
                         {
-                            "className":      'details-control',
                             "orderable":      false,
                             "data":           null,
-                            "defaultContent": ''
+                            "defaultContent": '<button class=\"btn btn-default details-control\">Ver Pedido</button>'
                         },
                         {"data": "numeroHtml"},
                         {"data": "situacaoHtml"},
@@ -152,7 +151,7 @@
                 minimumResultsForSearch: -1
             });
 
-            jQuery('#pedidos, #pedidosConcluidos').on('click', 'tbody td.details-control', function () {
+            jQuery('#pedidos, #pedidosConcluidos').on('click', 'tbody td button.details-control', function () {
                 var tr = jQuery(this).closest('tr');
                 var id = jQuery(this).closest('table').attr("id");
                 if (id == 'pedidos') {

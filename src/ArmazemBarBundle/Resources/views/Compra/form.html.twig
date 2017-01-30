@@ -22,7 +22,7 @@
             // get the new index
             var index = $collectionHolder.data('index');
 
-            var $newForm = jQuery(prototype.replace(/__name__/g, index));
+            var $newForm = jQuery("<tr>"+ prototype.replace(/__name__/g, index) +"<td></td></tr>");
 
             $collectionHolder.data('index', index + 1);
             $newForm.find('input').keyup(function () {
@@ -33,21 +33,30 @@
             $newForm.find('select').select2();
 
             addTagFormDeleteLink($newForm);
-            $collectionHolder.append($newForm);
+            $collectionHolder.find('table').show();
+            $collectionHolder.find('table tbody').append($newForm);
             jQuery('.select2-container').css("width", "100%");
-
+            jQuery("#salvar").removeAttr("disabled");
         }
         
         function addTagFormDeleteLink($newForm) {
             var $removeForm = jQuery('<a class="btn btn-default pull-right" href="#"><em class="fa fa-remove" ></em></a>');
-            var $div = jQuery("<div class='col-sm-2'></div>");
-            $div.append($removeForm);
-            $newForm.append($removeForm);
-
+            $coluna = $newForm.find("td:last").append($removeForm);
             $removeForm.on('click', function(e) {
                 e.preventDefault();
-                jQuery(this).parent().remove();
+                $table = jQuery(this).closest("table");
+                jQuery(this).closest("tr").remove();
+                escondeTabela($table);
             });
+        }
+        
+        function  escondeTabela($table) {
+            if (!jQuery.trim($table.find("tbody").html())){
+                $table.hide();
+            }
+            if (!jQuery.trim(jQuery("#bebidas table tbody").html())){
+                jQuery("#salvar").attr("disabled", "disabled");
+            }
         }
 
 
@@ -71,6 +80,9 @@
                 e.preventDefault();
                 addTagForm($compraBebidas);
             });
+            
+            
+            escondeTabela(jQuery('table'));
             
             jQuery('#compra_data').datepicker().mask("99/99/9999");
             jQuery('#loading').hide();
@@ -138,10 +150,23 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div id="bebidas" data-prototype="{{ form_row(form.compraBebidas.vars.prototype)|e  }}" class="bebidas">
-                                {% for compraBebidas in form.compraBebidas %}
-                                    {{ form_row(compraBebidas) }}
-                                {% endfor %} 
+                            <div id="bebidas" data-index="{{ form.compraBebidas.count }}" data-prototype="{{ form_widget(form.compraBebidas.vars.prototype)|e  }}" class="bebidas">                                
+                                <table style="display: none" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Bebida</th>
+                                            <th>Quantidade</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for compraBebidas in form.compraBebidas %}
+                                        <tr>
+                                            {{ form_row(compraBebidas) }}
+                                        </tr>
+                                        {% endfor %} 
+                                    </tbody>
+                                </table>                                
                              </div>
                         </div>
                     </div>

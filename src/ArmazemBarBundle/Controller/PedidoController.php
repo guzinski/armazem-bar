@@ -139,6 +139,8 @@ class PedidoController extends Controller
             'pedido_produtos'   => $pedidoProdutos,
             'situacao'          => $pedido->getStringSituacao(),
             'situacaoHtml'      => $pedido->getHtmlSituacao(),
+            'valorTotal'        => $pedido->getValorTotal(),
+            'valorTotalHtml'    => "<h4>R$ ". number_format($pedido->getValorTotal(), 2, ',', '.') ."</h4>",
         ];            
     }
     
@@ -160,7 +162,7 @@ class PedidoController extends Controller
             $em->flush();
             $msg = "Pedido <strong>criado</strong> com sucesso! Já está na fila de produção.";
             $request->getSession()->getFlashBag()->add("success", $msg);
-            return $this->redirectToRoute("usuario_index");
+            return $this->redirectToRoute("pedido_caixa");
         }
         
         return array("pedido"=>$pedido, "form"=>$form->createView());

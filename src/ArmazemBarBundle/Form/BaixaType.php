@@ -8,37 +8,36 @@
 
 namespace ArmazemBarBundle\Form;
 
-use ArmazemBarBundle\Entity\Pedido;
+use ArmazemBarBundle\Entity\Baixa;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Description of PedidoType
+ * Description of BaixaType
  *
  */
-class PedidoType extends AbstractType
+class BaixaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('pedidoProdutos', CollectionType::class, [
-            'entry_type'    => PedidoProdutoType::class,
+        $builder->add('baixaBebidas', CollectionType::class, [
+            'entry_type'    => BaixaBebidaType::class,
             'by_reference'  => FALSE,
             'allow_add'    => true,
         ]);
-        $builder->add('pedidoBebidas', CollectionType::class, [
-            'entry_type'    => PedidoBebidaType::class,
-            'by_reference'  => FALSE,
-            'allow_add'    => true,
-        ]);
+        $builder->add('data', DateType::class, array(
+            'widget' => 'single_text',
+            'format' => 'dd/MM/yyyy',
+        ));
     }
 
-    
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Pedido::class,
+            'data_class' => Baixa::class,
         ));
     }
 }

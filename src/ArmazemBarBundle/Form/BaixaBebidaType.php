@@ -8,8 +8,8 @@
 
 namespace ArmazemBarBundle\Form;
 
+use ArmazemBarBundle\Entity\BaixaBebida;
 use ArmazemBarBundle\Entity\Bebida;
-use ArmazemBarBundle\Entity\PedidoBebida;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -19,16 +19,15 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Description of Pedidobebida
+ * Description of BaixaBebidaType
  *
  */
-class PedidoBebidaType extends AbstractType
+class BaixaBebidaType extends AbstractType
 {
-    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('bebida', EntityType::class, [
-            'placeholder'   => "Selecione",
+            'placeholder'   => "Selecione a Bebida",
             'class'         => Bebida::class,
             'query_builder' => function (EntityRepository $er) {
                 $query = $er->createQueryBuilder('B');
@@ -37,30 +36,20 @@ class PedidoBebidaType extends AbstractType
             },
         ]);
         $builder->add('quantidade', NumberType::class, [
-            'attr' => ['placeholder' => "Quantidade", 'class' => "quantidade form-control"],
+            'attr' => ['placeholder' => "Quantidade", 'class' => "quantidade"],
         ]);
         $builder->add('estoque', TextType::class, [
             'mapped' => false,
             'attr' => ['class' => "estoque hidden"],
             'required' => false,
         ]);
-        $builder->add('valor_unidade', TextType::class, [
-            'mapped' => false,
-            'attr' => ['class' => "hidden valor_unidade"],
-            'required' => false,
-        ]);
-        $builder->add('valor_total', TextType::class, [
-            'mapped' => false,
-            'attr' => ['class' => "hidden valor_total"],
-            'required' => false,
-        ]);
     }
-   
-    
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => PedidoBebida::class,
+            'data_class' => BaixaBebida::class,
         ));
     }
+
 }

@@ -156,5 +156,19 @@ class Pedido extends BaseEntity
         
     }
 
+    public function getValorTotal()
+    {
+        $valor = 0;
+        foreach ($this->getPedidoBebidas() as $bebidasPedido) {
+            /* @var $bebidasPedido PedidoBebida */
+            $valor += $bebidasPedido->getBebida()->getPrecoVenda()*$bebidasPedido->getQuantidade();
+        }
+        foreach ($this->getPedidoProdutos() as $produtosPedido) {
+            /* @var $produtosPedido PedidoProduto */
+            $valor += $produtosPedido->getProduto()->getPrecoVenda()*$produtosPedido->getQuantidade();
+        }
+        
+        return $valor;
+    }
     
 }

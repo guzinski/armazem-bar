@@ -17,10 +17,18 @@
         <li class="{% if 'produto' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('produto_index') }}"><i class="fa fa-cubes"></i> <span>Produtos</span></a></li>
         {% endif  %}
         {% if is_granted('ROLE_BEBIDA') %}
-        <li class="{% if 'bebida' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('bebida_index') }}"><i class="fa fa-glass"></i> <span>Bebidas</span></a></li>
-        {% endif  %}
-        {% if is_granted('ROLE_COMPRA') %}
-        <li class="{% if 'compra' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('compra_index') }}"><i class="fa fa-sign-in"></i> <span>Compra de bebidas</span></a></li>
+        <li class="{% if 'bebida' in app.request.get('_route') or  'compra' in app.request.get('_route') or 'baixa' in app.request.get('_route') %} active{% endif %} parent">
+            <a href=""><i class="fa fa-glass"></i> <span>Bebidas</span></a>
+            <ul class="children">
+                <li class="{% if 'bebida' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('bebida_index') }}">Consulta</a></li>
+                    {% if is_granted('ROLE_COMPRA') %}
+                    <li class="{% if 'compra' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('compra_index') }}">Compra de bebidas</a></li>
+                    {% endif  %}
+                    {% if is_granted('ROLE_BAIXA') %}
+                    <li class="{% if 'baixa' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('baixa_index') }}">Baixa de bebidas</a></li>
+                    {% endif  %}
+            </ul>
+        </li>
         {% endif  %}
         {% if is_granted('ROLE_PEDIDO') %}
         <li class="{% if 'pedido_index' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('pedido_index') }}"><i class="fa fa-list"></i> <span>Histórico de pedidos</span></a></li>

@@ -66,6 +66,12 @@ class Bebida extends BaseEntity
      * @ORM\OneToMany(targetEntity="CompraBebida", mappedBy="bebida")
      **/
     private $compraBebidas;
+    
+    /**
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="BaixaBebida", mappedBy="bebida")
+     **/
+    private $baixaBebidas;
 
     
     public function __construct($descricao = "", $ativo = TRUE, $quantidadeInicial = 0, $precoCusto = NULL, $precoVenda = NULL)
@@ -78,6 +84,7 @@ class Bebida extends BaseEntity
         $this->precoVenda = $precoVenda;
         $this->pedidoBebidas = new ArrayCollection();
         $this->compraBebidas = new ArrayCollection();
+        $this->baixaBebidas = new ArrayCollection();
     }
 
     public function getDescricao()
@@ -162,7 +169,17 @@ class Bebida extends BaseEntity
         $this->compraBebidas = $compraBebidas;
         return $this;
     }
+    
+    public function getBaixaBebidas()
+    {
+        return $this->baixaBebidas;
+    }
 
+    public function setBaixaBebidas(Collection $baixaBebidas)
+    {
+        $this->baixaBebidas = $baixaBebidas;
+        return $this;
+    }
     
     public function getQuantidadeEstoque()
     {
@@ -175,6 +192,10 @@ class Bebida extends BaseEntity
         foreach ($this->getPedidoBebidas() as $pedidoBebida) {
             /* @var $pedidoBebida PedidoBebida */
             $quantidade -= $pedidoBebida->getQuantidade();
+        }
+        foreach ($this->getBaixaBebidas() as $baixaBebida) {
+            /* @var $baixaBebida BaixaBebida */
+            $quantidade -= $baixaBebida->getQuantidade();
         }
         
         return $quantidade;

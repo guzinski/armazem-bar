@@ -1,9 +1,8 @@
 {% extends "ArmazemBarBundle::layout.html.twig" %}
 {% form_theme form 'ArmazemBarBundle:Form:fields.html.twig' %}
-{% form_theme form.pedidoProdutos 'ArmazemBarBundle:Form:pedido.html.twig' %}
-{% form_theme form.pedidoBebidas 'ArmazemBarBundle:Form:comprabebidas.html.twig' %}
+{% form_theme form.baixaBebidas 'ArmazemBarBundle:Form:comprabebidas.html.twig' %}
 
-{% block title %}Do Armazêm Bar | Novo Pedido{% endblock %}
+{% block title %}Do Armazêm Bar | Baixa{% endblock %}
 {% block head %}
     <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
@@ -14,8 +13,7 @@
     <script type="text/javascript">
         
         
-        var $pedidoBebidas;
-        var $pedidoProdutos;
+        var $baixaBebidas;
 
         function addTagForm($collectionHolder) {
             // Get the data-prototype explained earlier
@@ -31,15 +29,9 @@
                 var valor = jQuery(this).val();
                 jQuery(this).val(valor.replace(/[^\d]/gi, ""));
             }).spinner({min: 1, change: quantidadeChange}).attr("min", "1");
-            
             $newForm.find(".estoque").change(estoqueChange);
-            $newForm.find(".valor_unidade").change(valorUnidadeChange);
-            $newForm.find(".valor_total").change(valorTotalChange);
-            if ($collectionHolder.attr("id") == "bebidas") {
-                $newForm.find('select').change(bebidaChange).select2();
-            } else if ($collectionHolder.attr("id") == "produtos") {
-                $newForm.find('select').change(produtoChange).select2();
-            }
+            
+            $newForm.find('select').change(bebidaChange).select2();
 
             addTagFormDeleteLink($newForm);
             $collectionHolder.find('table').show();
@@ -58,36 +50,16 @@
                 escondeTabela($table);
             });
         }
-        function addQuantidadeEstoque($newForm) {
-            var $estoqueForm = jQuery('<span class="estoque">Estoque</span>');
-            var $div = jQuery("<div class='col-sm-1'></div>");
-            $div.append($estoqueForm);
-            $newForm.children().append($div);
-        }
         
         function  escondeTabela($table) {
             if (!jQuery.trim($table.find("tbody").html())){
                 $table.hide();
             }
-            if (!jQuery.trim(jQuery("#bebidas table tbody").html()) && !jQuery.trim(jQuery("#produtos table tbody").html())){
+            if (!jQuery.trim(jQuery("#bebidas table tbody").html())){
                 jQuery("#salvar").attr("disabled", "disabled");
             }
         }
         
-        function produtoChange() {
-            var $select = jQuery(this);
-            if (this.value != "") {
-                jQuery(".locked").fadeIn();
-                jQuery.get("{{ path('produto_preco_venda') }}", { produto: this.value }, function (retorno){
-                    $select.closest("tr").find(".valor_unidade").val(retorno).trigger("change");
-                    jQuery(".locked").fadeOut();
-                });
-            } else {
-                $select.closest("tr").find(".quantidade").val(0).trigger("change").attr("max", "");
-                $select.closest("tr").find(".valor_unidade").val(0).trigger("change");
-            }
-            
-        }
         
         function bebidaChange() {
             var $select = jQuery(this);
@@ -96,18 +68,14 @@
                 jQuery.get("{{ path('bebida_estoque') }}", { bebida: this.value }, function (retorno){
                     $select.closest("tr").find(".estoque").val(retorno).trigger("change");
                     $select.closest("tr").find(".quantidade").attr("max", retorno);
-                    jQuery.get("{{ path('bebida_preco_venda') }}", { bebida: $select.val() }, function (retorno){
-                        $select.closest("tr").find(".valor_unidade").val(retorno).trigger("change");
-                        jQuery(".locked").fadeOut();
-                    });
+                    jQuery(".locked").fadeOut();
                 });
             } else {
                 $select.closest("tr").find(".estoque").val(0).trigger("change");
                 $select.closest("tr").find(".quantidade").val(0).trigger("change").attr("max", "");
-                $select.closest("tr").find(".valor_unidade").val(0).trigger("change");
             }
         }
-        
+
         function quantidadeChange() {
             var valorUnidade = jQuery(this).closest("tr").find(".valor_unidade").val() ? parseFloat(jQuery(this).closest("tr").find(".valor_unidade").val()) : 0;
             jQuery(this).closest("tr").find(".valor_total").val(valorUnidade*parseFloat(jQuery(this).val())).trigger("change");
@@ -119,50 +87,31 @@
             }
             jQuery(this).closest("td").find(".h4").html(jQuery(this).val());
         }
-        function  valorUnidadeChange() {
-            var quantidade = jQuery(this).closest("tr").find(".quantidade").val() ? parseFloat(jQuery(this).closest("tr").find(".quantidade").val()) : 0;
-            if (jQuery(this).closest("td").children().length == 1) {
-                jQuery(this).closest("td").append(jQuery("<span class=\"h4\"></h4>"))
-            }
-            console.log(quantidade);
-            console.log(parseFloat(jQuery(this).val()));
-            jQuery(this).closest("td").find(".h4").html(new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'BRL' }).format(jQuery(this).val()));
-            jQuery(this).closest("tr").find(".valor_total").val(quantidade*parseFloat(jQuery(this).val())).trigger("change");
-        }
+
         
-        function  valorTotalChange() {
-            if (jQuery(this).closest("td").children().length == 1) {
-                jQuery(this).closest("td").append(jQuery("<span class=\"h4\"></h4>"))
-            }
-            jQuery(this).closest("td").find(".h4").html(new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'BRL' }).format(jQuery(this).val()));
-            var total = 0;
-            jQuery(".valor_total").each(function() {
-                total += parseFloat(jQuery(this).val());
-            });
-            jQuery(".total_pedido").html(new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'BRL' }).format(total));
-        }
-
-        jQuery(document).ready(function () {            
-            $pedidoBebidas = jQuery('#bebidas');
-            $pedidoProdutos = jQuery('#produtos');
+        jQuery(document).ready(function () {
+            $baixaBebidas = jQuery('#bebidas');
             
+            $baixaBebidas.find("input").keyup(function () {
+                var valor = jQuery(this).val();
+                jQuery(this).val(valor.replace(/[^\d]/gi, ""));
+            }).spinner({min: 1});
 
-            $pedidoBebidas.data('index', '0');
-            $pedidoProdutos.data('index', '0');
+            $baixaBebidas.find('select').select2({minimumResultsForSearch: -1,});
+            jQuery('.select2-container').css("width", "100%");
+
+            $baixaBebidas.data('index', $baixaBebidas.find('div').length);
 
             jQuery("#add-bebida").on('click', function(e) {
                 e.preventDefault();
-                addTagForm($pedidoBebidas);
+                addTagForm($baixaBebidas);
             });
             
-            jQuery("#add-produto").on('click', function(e) {
-                e.preventDefault();
-                addTagForm($pedidoProdutos);
-            });
-            
+            jQuery('#baixa_data').datepicker().mask("99/99/9999");
             jQuery('#loading').hide();
-
-
+            
+            escondeTabela(jQuery('table'));
+            
             jQuery.extend(jQuery.validator.messages, {
                 max: jQuery.validator.format("A quantidade em estoque estoque dessa bebida é de {0}."),
             });
@@ -175,9 +124,8 @@
                     jQuery(element).closest('.form-group').removeClass('has-error');
                 },
                 errorPlacement: function (error, element) {
-                    jQuery(element).closest("td").append(error);
+                    jQuery(element).closest('.form-group').append(error);
                 },
-                ignore: [],
                 validClass: "",
                 submitHandler: function (form) {
                     jQuery("#salvar").hide();
@@ -185,8 +133,6 @@
                     form.submit();
                 }
             });
-            
-            
 
         });
 
@@ -197,15 +143,15 @@
     <div class="pageheader">
         <div class="media">
             <div class="pageicon pull-left">
-                <i class="fa fa-clipboard"></i>
+                <i class="fa fa-sign-out"></i>
             </div>
             <div class="media-body">
                 <ul class="breadcrumb">
                     <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
-                    <li><a href="#">Pedidos</a></li>
-                    <li>Novo Pedido</li>
+                    <li><a href="{{ path('baixa_index') }}">Baixas</a></li>
+                    <li>{{ baixa.getid>0 ? "Editar" : "Cadastrar" }} Baixa</li>
                 </ul>
-                <h4>Novo Pedido</h4>
+                <h4>{{ baixa.getid>0 ? "Editar" : "Cadastrar" }} Baixa</h4>
             </div>
         </div><!-- media -->
     </div><!-- pageheader -->
@@ -215,6 +161,12 @@
             <div class="col-md-12">
                 {{ form_start(form, {'attr' : {'class' : 'form-horizontal form-bordered'}}) }}
                 {{ form_errors(form) }}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {{ form_row(form.data) }}
+                    </div><!-- panel-body -->
+                </div><!-- panel -->
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h2 class="panel-title">
@@ -228,22 +180,20 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div id="bebidas" data-index="{{ form.pedidoBebidas.count }}" data-prototype="{{ form_widget(form.pedidoBebidas.vars.prototype)|e  }}" class="bebidas">
-                                <table style="display: none" class="table table-bordered">
+                            <div id="bebidas" data-index="{{ form.baixaBebidas.count }}" data-prototype="{{ form_widget(form.baixaBebidas.vars.prototype)|e  }}" class="bebidas">
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Bebida</th>
                                             <th>Quantidade</th>
                                             <th>Estoque</th>
-                                            <th>Valor unid.:</th>
-                                            <th>Valor Total:</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for pedidoBebidas in form.pedidoBebidas %}
+                                        {% for baixaBebida in form.baixaBebidas %}
                                         <tr>
-                                            {{ form_row(pedidoBebidas) }}
+                                            {{ form_row(baixaBebida) }}
                                         </tr>
                                         {% endfor %} 
                                         
@@ -253,67 +203,20 @@
                         </div>
                     </div>
                 </div><!-- panel -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h2 class="panel-title">
-                            <div class="row">
-                                <div class="col-sm-6">Produtos</div>
-                                <div class="col-sm-6">
-                                    <button id="add-produto" type="button" class="btn btn-success pull-right">Adicionar Produtos</button>
-                                </div>
-                            </div>
-                        </h2>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div id="produtos" data-prototype="{{ form_widget(form.pedidoProdutos.vars.prototype)|e  }}" class="bebidas">
-                                <table style="display: none" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Produto</th>
-                                            <th>Quantidade</th>
-                                            <th>Observações</th>
-                                            <th>Valor unid.:</th>
-                                            <th>Valor Total:</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for pedidoProduto in form.pedidoProdutos %}
-                                        <tr>
-                                            {{ form_row(pedidoProduto) }}
-                                        </tr>
-                                        {% endfor %} 
-                                    </tbody>
-                                </table>
-                             </div>
-                        </div>
-                    </div>
-                </div><!-- panel -->
 
-                
-                <div class="panel panel-default">
-                        <div class="row">
-                            <div class="col-sm-4 padding10">
-                                <span class="h4 ml10">Valor Total Pedido</span>
-                            </div>
-                            <div class="col-sm-8 mb10 mt10">
-                                <span class="total_pedido h3">0,00 R$</span>
-                            </div>
-                        </div>
-                </div>
-                
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-9">
                                 <img src="{{ asset('bundles/armazembar/images/loading.gif') }}" id="loading" alt="Carregando" />
-                                <button id="salvar" disabled="disabled" class="btn btn-primary mr5">Salvar</button>
+                                <button disabled="" id="salvar" class="btn btn-primary mr5">Salvar</button>
                                 <button type="button" onclick="history.back()" class="btn btn-default mr5">Cancelar</button>
                             </div>
                         </div>
                     </div>
                 </div><!-- panel -->
+
+
                 {{ form_end(form) }}
 
             </div><!-- col-md-12 -->

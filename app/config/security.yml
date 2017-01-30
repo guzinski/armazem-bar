@@ -43,3 +43,4 @@ security:
         - { path: ^/compra,         roles: ROLE_COMPRA }
         - { path: ^/pedido/cozinha, roles: ROLE_COZINHA }
         - { path: ^/pedido,         roles: ROLE_PEDIDO }
+        - { path: ^/baixa,          roles: ROLE_BAIXA }

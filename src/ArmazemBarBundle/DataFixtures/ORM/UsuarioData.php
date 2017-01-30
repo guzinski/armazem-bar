@@ -30,6 +30,7 @@ class UsuarioData implements FixtureInterface
         $adm->getPermissoes()->add($cozinhap);
         $adm->getPermissoes()->add(new Permissao("Compras", "COMPRA"));
         $adm->getPermissoes()->add(new Permissao("Pedidos", "PEDIDO"));
+        $adm->getPermissoes()->add(new Permissao("Baixa", "BAIXA"));
         $cozinha->getPermissoes()->add($cozinhap);
 
         $manager->persist($cozinha);

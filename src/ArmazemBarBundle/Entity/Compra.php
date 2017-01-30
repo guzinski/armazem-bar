@@ -64,7 +64,6 @@ class Compra extends BaseEntity
         return $this->id;
     }
     
-    
     public function addCompraBebida(CompraBebida $compraBebida)
     {
         $this->getCompraBebidas()->add($compraBebida);
@@ -77,3 +76,4 @@ class Compra extends BaseEntity
     }
     
 }
+

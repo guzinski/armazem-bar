@@ -15,6 +15,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,7 +28,7 @@ class PedidoProdutoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('produto', EntityType::class, [
-            'placeholder'   => "Selecione o produto",
+            'placeholder'   => "Selecione",
             'class'         => Produto::class,
             'query_builder' => function (EntityRepository $er) {
                 $query = $er->createQueryBuilder('P');
@@ -36,10 +37,20 @@ class PedidoProdutoType extends AbstractType
             },
         ]);
         $builder->add('quantidade', NumberType::class, [
-            'attr' => ['placeholder' => "Quantidade"],
+            'attr' => ['placeholder' => "Quantidade", 'class' => "form-control quantidade"],
         ]);
         $builder->add('observacoes', TextareaType::class, [
-            'attr' => ['placeholder' => "Descrição"],
+            'attr' => ['placeholder' => "Descrição", 'class' => "form-control"],
+            'required' => false,
+        ]);
+        $builder->add('valor_unidade', TextType::class, [
+            'mapped' => false,
+            'attr' => ['class' => "hidden valor_unidade"],
+            'required' => false,
+        ]);
+        $builder->add('valor_total', TextType::class, [
+            'mapped' => false,
+            'attr' => ['class' => "hidden valor_total"],
             'required' => false,
         ]);
     }
