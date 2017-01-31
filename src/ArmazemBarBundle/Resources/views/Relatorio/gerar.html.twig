@@ -75,22 +75,19 @@
             </tbody>
             
             <tfoot>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                     <th>
-                        Total Custo
+                        Total
                     </th>
                     <th>
                         <strong>R$ {{ precoCusto|number_format(2, ',', '.') }}</strong>
                     </th>
                     <th>
-                        Total Bruto
-                    </th>
-                    <th>
                         <strong>R$ {{ precoVenda|number_format(2, ',', '.') }}</strong>
                     </th>
                     <th>
-                        Lucro Líquido
-                    </th>
-                    <th colspan="2">
                         <strong>R$ {{ (precoVenda-precoCusto)|number_format(2, ',', '.') }}</strong>
                     </th>
             </tfoot>
