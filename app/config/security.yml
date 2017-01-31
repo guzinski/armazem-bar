@@ -44,3 +44,4 @@ security:
         - { path: ^/pedido/cozinha, roles: ROLE_COZINHA }
         - { path: ^/pedido,         roles: ROLE_PEDIDO }
         - { path: ^/baixa,          roles: ROLE_BAIXA }
+        - { path: ^/relatorio,      roles: ROLE_RELATORIO }

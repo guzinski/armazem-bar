@@ -1,0 +1,100 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <link href="{{ asset('bundles/armazembar/css/style.default.css') }}" rel="stylesheet">
+        <script>
+            window.onLoad = window.print()
+        </script>
+    </head>
+    <body style="margin: 0 auto; width: 980px;">
+        <h1><center>Relatório de Pedidos</center></h1>
+        <table class="table" style="padding: 1%; margin: 0 50px; width: 880px;">
+            <thead>
+                <tr>
+                    <th>
+                        Pedido
+                    </th>
+                    <th>
+                        Data
+                    </th>
+                    <th>
+                        Produtos
+                    </th>
+                    <th>
+                        Quantidade
+                    </th>
+                    <th>
+                        Custo de Produção
+                    </th>
+                    <th>
+                        Valor Venda
+                    </th>
+                    <th>
+                        Lucro Líquido
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set precoCusto = 0 %}
+                {% set precoVenda = 0 %}
+
+                {% for pedido in pedidos  %}
+                    {% if tipo != "B" %}
+                {% for produto in pedido.pedidoProdutos  %}
+                    {% set precoCusto = precoCusto + produto.produto.precoCusto*produto.quantidade %}
+                    {% set precoVenda = precoVenda + produto.produto.precoVenda*produto.quantidade %}
+                <tr>
+                    <td>{{ pedido.id }}</td>
+                    <td>{{ pedido.dataCadastro.format("d/m/Y") }}</td>
+                    <td>{{ produto.produto.descricao }}</td>
+                    <td>{{ produto.quantidade }}</td>
+                    <td>R$ {{ (produto.produto.precoCusto*produto.quantidade)|number_format(2, ',', '.') }}</td>
+                    <td>R$ {{ (produto.produto.precoVenda*produto.quantidade)|number_format(2, ',', '.') }}</td>
+                    <td>R$ {{ ((produto.produto.precoVenda*produto.quantidade) - (produto.produto.precoCusto*produto.quantidade))|number_format(2, ',', '.') }}</td>
+                </tr> 
+                
+                {% endfor %}
+                {% endif %}
+                {% if tipo != "P" %}
+                {% for bebida in pedido.pedidoBebidas  %}
+                    {% set precoCusto = precoCusto + bebida.bebida.precoCusto*bebida.quantidade %}
+                    {% set precoVenda = precoVenda + bebida.bebida.precoVenda*bebida.quantidade %}
+                <tr>
+                    <td>{{ pedido.id }}</td>
+                    <td>{{ pedido.dataCadastro.format("d/m/Y") }}</td>
+                    <td>{{ bebida.bebida.descricao }}</td>
+                    <td>{{ bebida.quantidade }}</td>
+                    <td>R$ {{ (bebida.bebida.precoCusto*bebida.quantidade)|number_format(2, ',', '.') }}</td>
+                    <td>R$ {{ (bebida.bebida.precoVenda*bebida.quantidade)|number_format(2, ',', '.') }}</td>
+                    <td>R$ {{ ((bebida.bebida.precoVenda*bebida.quantidade) - (bebida.bebida.precoCusto*bebida.quantidade))|number_format(2, ',', '.') }}</td>
+                </tr>
+                
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </tbody>
+            
+            <tfoot>
+                    <th>
+                        Total Custo
+                    </th>
+                    <th>
+                        <strong>R$ {{ precoCusto|number_format(2, ',', '.') }}</strong>
+                    </th>
+                    <th>
+                        Total Bruto
+                    </th>
+                    <th>
+                        <strong>R$ {{ precoVenda|number_format(2, ',', '.') }}</strong>
+                    </th>
+                    <th>
+                        Lucro Líquido
+                    </th>
+                    <th colspan="2">
+                        <strong>R$ {{ (precoVenda-precoCusto)|number_format(2, ',', '.') }}</strong>
+                    </th>
+            </tfoot>
+            
+        </table>
+    </body>
+</html>

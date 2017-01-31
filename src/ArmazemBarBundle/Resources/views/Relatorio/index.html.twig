@@ -1,0 +1,103 @@
+{% extends "ArmazemBarBundle::layout.html.twig" %}
+{% block title %}Do Armazêm Bar | Bebida{% endblock %}
+{% block head %}
+    <script src="{{ asset('bundles/armazembar/js/jquery-ui-1.10.3.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/select2.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery.maskedinput.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('bundles/armazembar/js/messages_ptbr.js') }}"></script>
+    
+    <script>
+        var table;
+        jQuery(document).ready(function(){
+            jQuery("#msgs").hide();
+            
+            jQuery("#tipo").select2({
+                minimumResultsForSearch: -1
+            });
+            jQuery('.select2-container').css("width", "100%");
+            jQuery("#inicio, #fim").mask("99/99/9999").datepicker();
+        });
+        
+        function callback(data) {
+            jQuery(".alert").remove();
+            table.ajax.reload();
+            jQuery("#msgs").append(data.message).fadeIn();
+        }
+        
+       
+    </script>
+{% endblock %}
+{% block mainpanel %}
+    <div class="pageheader">
+        <div class="media">
+            <div class="pageicon pull-left">
+                <i class="fa fa-bar-chart"></i>
+            </div>
+            <div class="media-body">
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('index') }}"><i class="glyphicon glyphicon-home"></i></a></li>
+                    <li>Relatório</li>
+                </ul>
+                <h4>Relatório</h4>
+            </div>
+        </div><!-- media -->
+    </div><!-- pageheader -->
+     <div class="contentpanel">
+        <div class="row">
+            <div class="col-lg-12">
+                {% for msg in success %}
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ msg|raw }}
+                </div>
+                {% endfor %}
+                
+                <div id="msgs"></div>
+                <form target="_blank" action="{{ path('relatorio_gerar') }}" method="POST">
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Filtros do relatório</h4>
+                            <p>Os Filtros do relatório são opcionais.</p>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Periodo Início</label>
+                                        <input name="inicio" id="inicio" placeholder="Início"  class="form-control" type="text">
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-6 -->
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Periodo Fim</label>
+                                        <input name="fim" id="fim" placeholder="Fim" class="form-control" type="text">
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-6 -->
+                            </div><!-- row -->
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Tipo</label>
+                                        <select id="tipo" name="tipo">
+                                            <option value="G">Geral</option>
+                                            <option value="P" >Produtos</option>
+                                            <option value="B">Bebidas</option>
+                                        </select>
+                                    </div><!-- form-group -->
+                                </div><!-- col-sm-6 -->
+
+                            </div><!-- row -->
+                        </div><!-- panel-body -->
+                        <div class="panel-footer">
+                            <button class="btn btn-primary">Gerar Relatório</button>
+                        </div><!-- panel-footer -->
+                    </div>
+                </form>
+            </div>
+        </div><!-- panel -->
+     </div><!-- contentpanel -->
+{% endblock %}

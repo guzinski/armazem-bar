@@ -51,5 +51,22 @@ class PedidoRepository extends EntityRepository
         return $query->getQuery()->getResult();
     }
     
-    
+    public function getRelatorio($periodoInicio = null, $periodoFim = null)
+    {
+        $query = $this->createQueryBuilder("P");
+        
+        if ($periodoInicio) {
+            $query->andWhere($query->expr()->gt("P.dataCadastro", ":periodoInicio"))
+                    ->setParameter("periodoInicio", $periodoInicio->format("Y-m-d"). " 00:00");
+        }
+        if ($periodoFim) {
+            $query->andWhere($query->expr()->lt("P.dataCadastro", ":periodoFim"))
+                    ->setParameter("periodoFim", $periodoFim->format("Y-m-d"). " 23:59");
+        }
+        $query->andWhere($query->expr()->eq("P.situacao", ":situacao"))
+                ->setParameter("situacao", \ArmazemBarBundle\Entity\Pedido::CONCLUIDO);
+        
+        return $query->getQuery()->getResult();
+    }
+
 }

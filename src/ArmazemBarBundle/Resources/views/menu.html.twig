@@ -36,6 +36,9 @@
         {% if is_granted('ROLE_USUARIO') %}
         <li class="{% if 'usuario' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('usuario_index') }}"><i class="fa fa-users"></i> <span>Usuarios</span></a></li>
         {% endif  %}
+        {% if is_granted('ROLE_RELATORIO') %}
+        <li class="{% if 'relatorio' in app.request.get('_route')  %} active{% endif %}"><a href="{{ path('relatorio_index') }}"><i class="fa fa-bar-chart"></i> <span>Relatório</span></a></li>
+        {% endif  %}
     </ul>
 
 </div><!-- leftpanel -->
